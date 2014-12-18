@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <base href="/">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="assets/css/cf-db-admin.min.css"/>
+
+    <script>document.write('<script id="LiveReloadScript" src="http://127.0.0.1:35729/livereload.js?snipver=1"></' + 'script>')</script>
+
+    <script>
+        var sticky_class = 'sticky';
+    </script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/foundation.min.js"></script>
+    <script src="assets/js/angular.js"></script>
+    <script src="assets/js/cf-db-admin.js"></script>
+
+</head>
+<body ng-app="cf-db">
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<div ng-controller="MainController as main">
+
+
+    <div class="off-canvas-wrap" data-offcanvas>
+        <div class="inner-wrap">
+
+            <!-- Off Canvas Menu -->
+            <aside class="right-off-canvas-menu">
+                <!-- whatever you want goes here -->
+                <ul>
+                    <li><a href="#">Item 1</a></li>
+                    ...
+                </ul>
+            </aside>
+
+            <div class="contain-to-grid sticky">
+                <nav class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">
+                    <ul class="title-area">
+                        <li class="name">
+                            <h1><a href="/"> Database Admin
+                                <small>by Code Fire</small>
+                            </a>
+                            </h1>
+
+                        </li>
+                        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+                    </ul>
+
+                    <section class="top-bar-section">
+                        <ul class="right">
+                            <li><a href="/">Home</a></li>
+
+                            <li class="has-dropdown">
+                                <a href="#">Quick Links</a>
+                                <ul class="dropdown">
+                                    <li><a href="/Databases/">Databases</a></li>
+                                </ul>
+                            </li>
+
+                            <li ng-show="main.auth.loggedIn"><a href="/" ng-click="main.logout()">Log Out</a></li>
+                            <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
+                            <li><a class="right-off-canvas-toggle" href="#">Settings</a></li>
+                        </ul>
+
+                    </section>
+                </nav>
+            </div>
+
+
+            <div class="row">
+                <div class="large-12 columns">
+                    <div class="nav-bar right">
+
+                    </div>
+
+                    <hr/>
+                </div>
+            </div>
+
+            <div class="row">
+
+
+                <div class="large-9 columns" role="content">
+                    <ul>
+                        <li>debug : {{main.debug}}</li>
+                        <li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>
+                        <li>main.location.path(): {{main.location.path()}}</li>
+                        <li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>
+                    </ul>
+
+                    <div ng-view></div>
+
+                </div>
+
+                <aside class="large-3 columns">
+
+                    <h5>Categories</h5>
+                    <ul class="side-nav">
+                        <li><a href="#">News</a></li>
+                        <li><a href="#">Code</a></li>
+                        <li><a href="#">Design</a></li>
+                        <li><a href="#">Fun</a></li>
+                        <li><a href="#">Weasels</a></li>
+                    </ul>
+
+                    <div class="panel">
+                        <h5>Featured</h5>
+
+                        <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball
+                            irure
+                            bacon nulla pork belly cupidatat meatloaf cow.</p>
+                        <a href="#">Read More →</a>
+                    </div>
+
+                </aside>
+
+
+            </div>
+
+            <footer class="row">
+                <div class="large-12 columns">
+                    <hr/>
+                    <div class="row">
+                        <div class="large-6 columns">
+                            <p>© Copyright no one at all. Go to town.</p>
+                        </div>
+                        <div class="large-6 columns">
+                            <ul class="inline-list right">
+                                <li><a href="#">Link 1</a></li>
+                                <li><a href="#">Link 2</a></li>
+                                <li><a href="#">Link 3</a></li>
+                                <li><a href="#">Link 4</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+            <!-- close the off-canvas menu -->
+            <a class="exit-off-canvas"></a>
+
+        </div>
+    </div>
+
+
+</div>
+<!-- end MainController -->
+
+
+<script>
+    $(document).foundation();
+</script>
+
+</body>
+</html>
