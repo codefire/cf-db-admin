@@ -79,7 +79,7 @@ function AuthService($location, Request, Navigation) {
         loggedIn: false,
         token: null,
 
-        login: function () {
+        login: function (credentials) {
             /**
              * @todo write an actual login script
              */
@@ -89,7 +89,7 @@ function AuthService($location, Request, Navigation) {
                 method: "post",
                 url: "/api/dummy/log-in.json",
                 data: {
-                    loginData: 'test'
+                    credentials: credentials
                 }
             }).success(function(data, status) {
                 if (typeof console !== "undefined" && console !== null) {

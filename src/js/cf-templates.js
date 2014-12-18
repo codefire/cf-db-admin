@@ -29,6 +29,16 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
     "    <p>Temp Login place holder</p>\n" +
+    "    <ul>\n" +
+    "        <li>\n" +
+    "            <label for=\"username\">Username : </label>\n" +
+    "            <input type=\"text\" id=\"username\" ng-model=\"loginCtrl.username\"/>\n" +
+    "        </li>\n" +
+    "        <li>\n" +
+    "            <label for=\"password\">Password : </label>\n" +
+    "            <input type=\"password\" id=\"password\" ng-model=\"loginCtrl.password\"/>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
     "    <button class=\"button\" ng-click=\"loginCtrl.login()\">Log in</button>\n" +
     "</div>\n" +
     "\n" +

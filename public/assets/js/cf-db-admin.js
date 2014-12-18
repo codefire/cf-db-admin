@@ -80,7 +80,7 @@ function AuthService($location, Request, Navigation) {
         loggedIn: false,
         token: null,
 
-        login: function () {
+        login: function (credentials) {
             /**
              * @todo write an actual login script
              */
@@ -90,7 +90,7 @@ function AuthService($location, Request, Navigation) {
                 method: "post",
                 url: "/api/dummy/log-in.json",
                 data: {
-                    loginData: 'test'
+                    credentials: credentials
                 }
             }).success(function(data, status) {
                 if (typeof console !== "undefined" && console !== null) {
@@ -262,6 +262,16 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
     "    <p>Temp Login place holder</p>\n" +
+    "    <ul>\n" +
+    "        <li>\n" +
+    "            <label for=\"username\">Username : </label>\n" +
+    "            <input type=\"text\" id=\"username\" ng-model=\"loginCtrl.username\"/>\n" +
+    "        </li>\n" +
+    "        <li>\n" +
+    "            <label for=\"password\">Password : </label>\n" +
+    "            <input type=\"password\" id=\"password\" ng-model=\"loginCtrl.password\"/>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
     "    <button class=\"button\" ng-click=\"loginCtrl.login()\">Log in</button>\n" +
     "</div>\n" +
     "\n" +
@@ -309,10 +319,16 @@ function LoginController($window, Request, $route, $routeParams, $location, Navi
     ctrl.errors = [];
     ctrl.Navigation = Navigation;
 
+    ctrl.username = 'demoUser'
+    ctrl.password = '123456789'
+
     console.log('login controller ran');
 
     ctrl.login = function(){
-        AuthService.login();
+        AuthService.login({
+            username: ctrl.username,
+            password: ctrl.password
+        });
         if(AuthService.isLoggedIn( false ) == true){
             $location.url('/Databases/')
         }

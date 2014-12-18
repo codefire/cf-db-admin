@@ -13,10 +13,16 @@ function LoginController($window, Request, $route, $routeParams, $location, Navi
     ctrl.errors = [];
     ctrl.Navigation = Navigation;
 
+    ctrl.username = 'demoUser'
+    ctrl.password = '123456789'
+
     console.log('login controller ran');
 
     ctrl.login = function(){
-        AuthService.login();
+        AuthService.login({
+            username: ctrl.username,
+            password: ctrl.password
+        });
         if(AuthService.isLoggedIn( false ) == true){
             $location.url('/Databases/')
         }

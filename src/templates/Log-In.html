@@ -2,6 +2,16 @@
 
 <div ng-show="!main.auth.loggedIn">
     <p>Temp Login place holder</p>
+    <ul>
+        <li>
+            <label for="username">Username : </label>
+            <input type="text" id="username" ng-model="loginCtrl.username"/>
+        </li>
+        <li>
+            <label for="password">Password : </label>
+            <input type="password" id="password" ng-model="loginCtrl.password"/>
+        </li>
+    </ul>
     <button class="button" ng-click="loginCtrl.login()">Log in</button>
 </div>
 
