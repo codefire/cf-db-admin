@@ -1,0 +1,7 @@
+# phpstorm
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+node_modules
+bower_components
+vendor
