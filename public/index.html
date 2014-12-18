@@ -19,9 +19,6 @@
 
     <script>document.write('<script id="LiveReloadScript" src="http://127.0.0.1:35729/livereload.js?snipver=1"></' + 'script>')</script>
 
-    <script>
-        var sticky_class = 'sticky';
-    </script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/foundation.min.js"></script>
     <script src="assets/js/angular.js"></script>
@@ -35,16 +32,19 @@
 <![endif]-->
 <div ng-controller="MainController as main">
 
-
     <div class="off-canvas-wrap" data-offcanvas>
         <div class="inner-wrap">
 
             <!-- Off Canvas Menu -->
             <aside class="right-off-canvas-menu">
                 <!-- whatever you want goes here -->
+                <h3>API Type</h3>
+
+                <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
+
+
                 <ul>
                     <li><a href="#">Item 1</a></li>
-                    ...
                 </ul>
             </aside>
 
@@ -73,7 +73,7 @@
                                 </ul>
                             </li>
 
-                            <li ng-show="main.auth.loggedIn"><a href="/" ng-click="main.logout()">Log Out</a></li>
+                            <li ng-show="main.auth.loggedIn"><a href="/log-in/" ng-click="main.logout()">Log Out</a></li>
                             <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
                             <li><a class="right-off-canvas-toggle" href="#">Settings</a></li>
                         </ul>
@@ -82,33 +82,22 @@
                 </nav>
             </div>
 
-
             <div class="row">
-                <div class="large-12 columns">
-                    <div class="nav-bar right">
-
-                    </div>
-
-                    <hr/>
-                </div>
-            </div>
-
-            <div class="row">
-
 
                 <div class="large-9 columns" role="content">
-                    <ul>
-                        <li>debug : {{main.debug}}</li>
-                        <li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>
-                        <li>main.location.path(): {{main.location.path()}}</li>
-                        <li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>
-                    </ul>
-
                     <div ng-view></div>
-
                 </div>
 
                 <aside class="large-3 columns">
+
+                    <ul>
+                        <li>api type : {{main.settings.apiType}}</li>
+                        <li>debug : {{main.debug}}</li>
+                        <li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>
+                        <li>main.auth.token: {{main.auth.token}}</li>
+                        <li>main.location.path(): {{main.location.path()}}</li>
+                        <li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>
+                    </ul>
 
                     <h5>Categories</h5>
                     <ul class="side-nav">
