@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "version": 0.1
+  },
+  "payload": {
+    "tables": [
+      {"name": "table1"},
+      {"name": "my_table"},
+      {"name": "Users"},
+      {"name": "legacy_table"},
+      {"name": "Some_Table"},
+      {"name": "CacheTable"}
+    ]
+  }
+}

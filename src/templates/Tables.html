@@ -1,0 +1,19 @@
+<h2>Tables template</h2>
+<ul>
+    <li>debug : {{tableCtrl.debug}}</li>
+</ul>
+
+<div ng-show="tableCtrl.tables">
+
+    <ul>
+        <li ng-repeat="table in tableCtrl.tables">
+           <a href="/Tables/{{table.name}}/">{{table.name}}</a>
+        </li>
+    </ul>
+</div>
+
+<ul>
+    <li ng-repeat="(name, param) in tableCtrl.params">
+        <pre>{{name}} = {{param}}</pre>
+    </li>
+</ul>

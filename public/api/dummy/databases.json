@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "version": 0.1
+  },
+  "payload": {
+    "databases": [
+      {"name": "WordPress"},
+      {"name": "MyBigDB"},
+      {"name": "phpbb"},
+      {"name": "MyCms"},
+      {"name": "Some_Db"},
+      {"name": "My Database"}
+    ]
+  }
+}
