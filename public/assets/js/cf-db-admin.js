@@ -261,7 +261,7 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "<h1>Log In</h1>\n" +
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
-    "    <p>Temp Login place holder</p>\n" +
+    "    <p>This is a temporary login form, just use the sample credentials provided for now.</p>\n" +
     "    <ul>\n" +
     "        <li>\n" +
     "            <label for=\"username\">Username : </label>\n" +
