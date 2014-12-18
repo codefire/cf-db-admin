@@ -1,5 +1,10 @@
 <h1>Log In</h1>
 
-<p>Temp Login place holder</p>
+<div ng-show="!main.auth.loggedIn">
+    <p>Temp Login place holder</p>
+    <button class="button" ng-click="loginCtrl.login()">Log in</button>
+</div>
 
-<button class="button" ng-click="loginCtrl.login()">Log in</button>
+<div ng-show="main.auth.loggedIn">
+    <p>You are now logged in :)</p>
+</div>
