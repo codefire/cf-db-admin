@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "version": 0.1
+  },
+  "payload": {
+    "fields": [
+      {"name": "fields1", "type":"varchar"},
+      {"name": "my_field", "type":"int"},
+      {"name": "Username", "type":"varchar"},
+      {"name": "legacy_field", "type":"text"},
+      {"name": "Some_Field", "type":"boolean"},
+      {"name": "Counter", "type":"int"}
+    ]
+  }
+}

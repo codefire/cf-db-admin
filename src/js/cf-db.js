@@ -6,6 +6,7 @@ angular.module("cf-db", ['ngRoute', 'cf-templates'])
     .controller("MainController", MainController)
     .controller("DatabaseController", DatabaseController)
     .controller("TableController", TableController)
+    .controller("FieldsController", FieldsController)
 ;
 
 function MainConfig($routeProvider, $locationProvider) {
@@ -20,6 +21,12 @@ function MainConfig($routeProvider, $locationProvider) {
             templateUrl: '/cf-templates/Tables.html',
             controller: 'TableController',
             controllerAs: 'tableCtrl',
+            public: false
+        })
+        .when('/Tables/:tableName/', {
+            templateUrl: '/cf-templates/Fields.html',
+            controller: 'FieldsController',
+            controllerAs: 'fieldCtrl',
             public: false
         })
         .when('/log-in/', {
@@ -196,7 +203,7 @@ TableController.$inject = ["$window", "Request", "$route", "$routeParams", "$loc
 function TableController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
     var ctrl;
     ctrl = this;
-    ctrl.debug = "If you can see this, then DatabaseController is working :)";
+    ctrl.debug = "If you can see this, then TableController is working :)";
     ctrl.dataLoaded = false;
     ctrl.location = $location.path()
     ctrl.errors = [];
@@ -228,5 +235,47 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
     }
 
     ctrl.loadTables();
+
+};
+
+FieldsController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function FieldsController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+
+    console.log('Fields Controller');
+
+    var ctrl;
+    ctrl = this;
+    ctrl.debug = "If you can see this, then FieldsController is working :)";
+    ctrl.dataLoaded = false;
+    ctrl.location = $location.path()
+    ctrl.errors = [];
+
+    ctrl.Navigation = Navigation;
+
+    ctrl.fields = []
+
+    ctrl.params = $routeParams;
+    AuthService.isLoggedIn();
+
+    ctrl.loadFields = function(){
+        Request.foreground({
+            method: "post",
+            url: "/api/dummy/fields.json",
+            data: {
+                loginData: 'test'
+            }
+        }).success(function(data, status) {
+            if (typeof console !== "undefined" && console !== null) {
+                console.log('api success', data);
+            }
+            ctrl.fields = data.payload.fields;
+        }).error(function(data, status) {
+            if (typeof console !== "undefined" && console !== null) {
+                console.log('api error', data);
+            }
+        });
+    }
+
+    ctrl.loadFields();
 
 };

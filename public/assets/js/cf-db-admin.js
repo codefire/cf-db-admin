@@ -7,6 +7,7 @@ angular.module("cf-db", ['ngRoute', 'cf-templates'])
     .controller("MainController", MainController)
     .controller("DatabaseController", DatabaseController)
     .controller("TableController", TableController)
+    .controller("FieldsController", FieldsController)
 ;
 
 function MainConfig($routeProvider, $locationProvider) {
@@ -21,6 +22,12 @@ function MainConfig($routeProvider, $locationProvider) {
             templateUrl: '/cf-templates/Tables.html',
             controller: 'TableController',
             controllerAs: 'tableCtrl',
+            public: false
+        })
+        .when('/Tables/:tableName/', {
+            templateUrl: '/cf-templates/Fields.html',
+            controller: 'FieldsController',
+            controllerAs: 'fieldCtrl',
             public: false
         })
         .when('/log-in/', {
@@ -197,7 +204,7 @@ TableController.$inject = ["$window", "Request", "$route", "$routeParams", "$loc
 function TableController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
     var ctrl;
     ctrl = this;
-    ctrl.debug = "If you can see this, then DatabaseController is working :)";
+    ctrl.debug = "If you can see this, then TableController is working :)";
     ctrl.dataLoaded = false;
     ctrl.location = $location.path()
     ctrl.errors = [];
@@ -231,7 +238,49 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
     ctrl.loadTables();
 
 };
-angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+
+FieldsController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function FieldsController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+
+    console.log('Fields Controller');
+
+    var ctrl;
+    ctrl = this;
+    ctrl.debug = "If you can see this, then FieldsController is working :)";
+    ctrl.dataLoaded = false;
+    ctrl.location = $location.path()
+    ctrl.errors = [];
+
+    ctrl.Navigation = Navigation;
+
+    ctrl.fields = []
+
+    ctrl.params = $routeParams;
+    AuthService.isLoggedIn();
+
+    ctrl.loadFields = function(){
+        Request.foreground({
+            method: "post",
+            url: "/api/dummy/fields.json",
+            data: {
+                loginData: 'test'
+            }
+        }).success(function(data, status) {
+            if (typeof console !== "undefined" && console !== null) {
+                console.log('api success', data);
+            }
+            ctrl.fields = data.payload.fields;
+        }).error(function(data, status) {
+            if (typeof console !== "undefined" && console !== null) {
+                console.log('api error', data);
+            }
+        });
+    }
+
+    ctrl.loadFields();
+
+};
+angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
@@ -251,6 +300,28 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "\n" +
     "<ul>\n" +
     "    <li ng-repeat=\"(name, param) in databaseCtrl.params\">\n" +
+    "        <pre>{{name}} = {{param}}</pre>\n" +
+    "    </li>\n" +
+    "</ul>");
+}]);
+
+angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("/cf-templates/Fields.html",
+    "<h2>Fields template</h2>\n" +
+    "<ul>\n" +
+    "    <li>debug : {{fieldCtrl.debug}}</li>\n" +
+    "</ul>\n" +
+    "\n" +
+    "<div ng-show=\"fieldCtrl.fields\">\n" +
+    "    <ul>\n" +
+    "        <li ng-repeat=\"field in fieldCtrl.fields\">\n" +
+    "           {{field.name}} - {{field.type}}\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>\n" +
+    "\n" +
+    "<ul>\n" +
+    "    <li ng-repeat=\"(name, param) in fieldCtrl.params\">\n" +
     "        <pre>{{name}} = {{param}}</pre>\n" +
     "    </li>\n" +
     "</ul>");

@@ -1,4 +1,4 @@
-angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
@@ -18,6 +18,28 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "\n" +
     "<ul>\n" +
     "    <li ng-repeat=\"(name, param) in databaseCtrl.params\">\n" +
+    "        <pre>{{name}} = {{param}}</pre>\n" +
+    "    </li>\n" +
+    "</ul>");
+}]);
+
+angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("/cf-templates/Fields.html",
+    "<h2>Fields template</h2>\n" +
+    "<ul>\n" +
+    "    <li>debug : {{fieldCtrl.debug}}</li>\n" +
+    "</ul>\n" +
+    "\n" +
+    "<div ng-show=\"fieldCtrl.fields\">\n" +
+    "    <ul>\n" +
+    "        <li ng-repeat=\"field in fieldCtrl.fields\">\n" +
+    "           {{field.name}} - {{field.type}}\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>\n" +
+    "\n" +
+    "<ul>\n" +
+    "    <li ng-repeat=\"(name, param) in fieldCtrl.params\">\n" +
     "        <pre>{{name}} = {{param}}</pre>\n" +
     "    </li>\n" +
     "</ul>");
