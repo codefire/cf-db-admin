@@ -38,14 +38,16 @@
             <!-- Off Canvas Menu -->
             <aside class="right-off-canvas-menu">
                 <!-- whatever you want goes here -->
-                <h3>API Type</h3>
+                <div class="panel">
+                    <h3>API Type</h3>
 
-                <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
+                    <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
+                    <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="php"/> php API</label>
 
-
-                <ul>
-                    <li><a href="#">Item 1</a></li>
-                </ul>
+                    <ul>
+                        <li><a href="#">Item 1</a></li>
+                    </ul>
+                </div>
             </aside>
 
             <div class="contain-to-grid sticky">
@@ -66,7 +68,7 @@
                         <ul class="right">
                             <li><a href="/">Home</a></li>
 
-                            <li class="has-dropdown">
+                            <li class="has-dropdown" ng-show="main.auth.loggedIn">
                                 <a href="#">Quick Links</a>
                                 <ul class="dropdown">
                                     <li><a href="/Databases/">Databases</a></li>
@@ -85,6 +87,24 @@
             <div class="row">
 
                 <div class="large-9 columns" role="content">
+                    <div ng-show="main.notifications">
+                        <div ng-show="main.notifications.errors">
+                            <div class="alert label" ng-repeat="error in main.notifications.errors">
+                                {{error.message}}
+                            </div>
+                        </div>
+                        <div ng-show="main.notifications.warnings">
+                            <div class="secondary label" ng-repeat="warning in main.notifications.warnings">
+                                {{warning.message}}
+                            </div>
+                        </div>
+                        <div ng-show="main.notifications.messages">
+                            <div class="label" ng-repeat="msg in main.notifications.messages">
+                                {{msg.message}}
+                            </div>
+                        </div>
+                    </div>
+
                     <div ng-view></div>
                 </div>
 
@@ -92,33 +112,13 @@
 
                     <ul>
                         <li>api type : {{main.settings.apiType}}</li>
-                        <li>debug : {{main.debug}}</li>
                         <li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>
-                        <li>main.auth.token: {{main.auth.token}}</li>
+                        <li>main.auth.token: {{main.auth.bucket.token}}</li>
                         <li>main.location.path(): {{main.location.path()}}</li>
                         <li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>
                     </ul>
 
-                    <h5>Categories</h5>
-                    <ul class="side-nav">
-                        <li><a href="#">News</a></li>
-                        <li><a href="#">Code</a></li>
-                        <li><a href="#">Design</a></li>
-                        <li><a href="#">Fun</a></li>
-                        <li><a href="#">Weasels</a></li>
-                    </ul>
-
-                    <div class="panel">
-                        <h5>Featured</h5>
-
-                        <p>Pork drumstick turkey fugiat. Tri-tip elit turducken pork chop in. Swine short ribs meatball
-                            irure
-                            bacon nulla pork belly cupidatat meatloaf cow.</p>
-                        <a href="#">Read More →</a>
-                    </div>
-
                 </aside>
-
 
             </div>
 
@@ -127,7 +127,7 @@
                     <hr/>
                     <div class="row">
                         <div class="large-6 columns">
-                            <p>© Copyright no one at all. Go to town.</p>
+                            <p></p>
                         </div>
                         <div class="large-6 columns">
                             <ul class="inline-list right">
