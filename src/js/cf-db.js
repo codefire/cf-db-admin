@@ -105,35 +105,18 @@ function SettingService() {
     }
 }
 
-function Notify($window) {
+function Notify($window, Settings) {
     return {
-        errors:[],
-        warnings:[],
-        messages:[],
-        error: function(message, data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                console.log('Notify - error : ', message, status, data);
-            }
-
+        errors: [],
+        warnings: [],
+        messages: [],
+        error: function (message, data, status) {
             this.errors.push({
                 message: message
             });
-
-            //if (!status || status === 200) {
-            //    angular.element.growl.error({
-            //        message: message,
-            //        duration: 25000
-            //    });
-            //} else {
-            //    angular.element.growl.error({
-            //        message: message + "status code " + status,
-            //        duration: 25000
-            //    });
-            //}
-
             return this.stackErrors(data);
         },
-        warning: function(message) {
+        warning: function (message) {
             return this.warnings.push({
                 message: message
             });
@@ -142,23 +125,14 @@ function Notify($window) {
             //    duration: 25000
             //});
         },
-        info: function(message) {
+        info: function (message) {
             return this.messages.push({
                 message: message
             });
-            //console.log('Notify.info');
-            //return angular.element.growl.notice({
-            //    message: message,
-            //    duration: 25000
-            //});
         },
-        stackErrors: function(data) {
+        stackErrors: function (data) {
             var error, msg, warning, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
             if (typeof data === 'object' || typeof data === 'array') {
-
-                console.log('Notify.stackErrors', data);
-
-                angular.element('#growls').remove();
                 if (data.errors) {
                     _ref = data.errors;
                     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -204,8 +178,7 @@ function Notify($window) {
                 }
             }
         },
-        loading: function(type, flag) {
-            console.log('Notify.loading');
+        loading: function (type, flag) {
             var workingSelector;
             workingSelector = '#loading-foreground';
             if (type === 'invisible') {
@@ -219,7 +192,10 @@ function Notify($window) {
             }
             return angular.element(workingSelector).toggleClass('showing');
         },
-        clear: function(){
+        notFound: function(endPoint){
+            this.error('API end Point ' + endPoint + ' could not be found at ' + Settings.apiUrl + Settings.apiType + '/' + endPoint)
+        },
+        clear: function () {
             this.errors = [];
             this.warnings = [];
             this.messages = [];
@@ -230,30 +206,32 @@ function Notify($window) {
 
 function HttpInterceptor($q, Notify) {
     return {
-        request: function(config) {
+        request: function (config) {
             Notify.clear();
             Notify.loading(config.loadType, 1);
             return config || $q.when(config);
         },
-        requestError: function(rejection) {
+        requestError: function (rejection) {
             Notify.stackErrors(rejection.data);
             return $q.reject(rejection);
         },
         response: function (response) {
+            var contentType = '';
+            if(typeof(response.headers()['content-type']) != 'undefined')
+                contentType = response.headers()['content-type'];
 
-            Notify.stackErrors(response.data);
-
-            if (response.headers()['content-type'] === "application/json; charset=utf-8") {
+            if (contentType.indexOf('application/json') != -1) {
                 // Validate response, if not ok reject
-                var data = examineJSONResponse(response); // assumes this function is available
+                // var data = examineJSONResponse(response); // assumes this function is available
+                Notify.stackErrors(response.data);
 
-                if (!data)
-                    return $q.reject(response);
+                //if (!data)
+                //    return $q.reject(response);
 
             } else if (typeof(response.config) != 'undefined') {
                 if (typeof(response.config.endPoint) != 'undefined' && response.config.endPoint.indexOf('.json') != -1) {
                     if (response.headers()['content-type'].indexOf('json') == -1) {
-                        Notify.error('API Returned non-JSON response', {}, response.status);
+                        Notify.error('API '+response.config.endPoint+' Returned non-JSON response', {}, response.status);
                         return $q.reject(response);
                     }
                 }
@@ -262,8 +240,13 @@ function HttpInterceptor($q, Notify) {
             return response;
         },
         responseError: function (response) {
-            Notify.loading(rejection.config.loadType, 0);
-            Notify.error(rejection.statusText, rejection.data, rejection.status);
+            Notify.loading(response.config.loadType, 0);
+            if(response.status == 404){
+                Notify.notFound(response.config.endPoint);
+            }else{
+                Notify.error(response.statusText, response.data, response.status);
+            }
+
             // do something on error
             return $q.reject(response);
         }
@@ -289,17 +272,12 @@ function AuthService($location, Token, Request, Navigation) {
                     credentials: credentials
                 }
             }).success(function (data, status) {
-                if (typeof console !== "undefined" && console !== null) {
-                    //console.log('api success', data);
-                }
                 if (data.payload.loggedIn == true) {
                     auth.loggedIn = true;
                     auth.bucket.token = data.payload.token;
                 }
             }).error(function (data, status) {
-                if (typeof console !== "undefined" && console !== null) {
-                    //console.log('api error', data);
-                }
+
             });
         },
 
@@ -373,14 +351,9 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.databases = data.payload.databases;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
-            }
+
         });
     }
 
@@ -412,14 +385,9 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.tables = data.payload.tables;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
-            }
+
         });
     }
 
@@ -429,8 +397,6 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
 
 FieldsController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
 function FieldsController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
-
-    console.log('Fields Controller');
 
     var ctrl;
     ctrl = this;
@@ -454,14 +420,9 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.fields = data.payload.fields;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
-            }
+
         });
     }
 
