@@ -16,7 +16,8 @@
   ],
   "dependencies": {
     "cf-css": "codefire/cf-css",
-    "angular": "~1.3.5",
-    "angular-route": "~1.3.5"
+    "angular": "~1.3.11",
+    "angular-route": "~1.3.11",
+    "angular-cookies": "~1.3.11"
   }
 }

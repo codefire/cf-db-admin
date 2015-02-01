@@ -43,7 +43,8 @@ module.exports = function (grunt) {
             angular: {
                 src: [
                     bowerPath + 'angular/angular.js',
-                    bowerPath + 'angular-route/angular-route.js'
+                    bowerPath + 'angular-route/angular-route.js',
+                    bowerPath + 'angular-cookies/angular-cookies.js'
                 ],
                 dest: 'public/assets/js/angular.js'
             },

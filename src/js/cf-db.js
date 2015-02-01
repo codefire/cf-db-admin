@@ -1,4 +1,4 @@
-angular.module("cf-db", ['ngRoute', 'cf-templates'])
+angular.module("cf-db", ['ngRoute', 'ngCookies', 'cf-templates'])
     .config(MainConfig)
     .factory("Settings", SettingService)
     .factory("Token", TokenService)
@@ -63,6 +63,8 @@ function RequestWrapper($http, Token, Settings) {
         foreground: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "foreground";
                     arguments[0].data.auth = Token;
@@ -73,6 +75,8 @@ function RequestWrapper($http, Token, Settings) {
         background: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "background";
                     arguments[0].data.auth = Token;
@@ -83,6 +87,8 @@ function RequestWrapper($http, Token, Settings) {
         invisible: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "invisible";
                     arguments[0].data.auth = Token;
@@ -93,13 +99,20 @@ function RequestWrapper($http, Token, Settings) {
     };
 };
 
-function Navigation() {
+function Navigation($location) {
     return {
         showView: true,
         params: [],
+        redirectTo: null,
         loadParams: function(params){
             this.params = params;
             return this;
+        },
+        redirect: function(){
+            if(this.redirectTo){
+                $location.url(this.redirectTo);
+            }
+            this.redirectTo = null;
         }
     };
 }
@@ -141,6 +154,9 @@ function Notify($window, Settings) {
             return this.messages.push({
                 message: message
             });
+        },
+        message: function(message) {
+            return this.info(message);
         },
         stackErrors: function (data) {
             var error, msg, warning, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
@@ -265,18 +281,14 @@ function HttpInterceptor($q, Notify) {
     };
 }
 
-AuthService.$inject = ["$location", "Token", "Request", "Navigation"];
-function AuthService($location, Token, Request, Navigation) {
+AuthService.$inject = ["$location", "$cookies", "Token", "Request", "Navigation", "Notify"];
+function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
     return {
         loggedIn: false,
         bucket: Token,
 
         login: function (credentials) {
-            /**
-             * @todo write an actual login script
-             */
             var auth = this;
-
             Request.foreground({
                 method: "post",
                 endPoint: "log-in.json",
@@ -284,28 +296,64 @@ function AuthService($location, Token, Request, Navigation) {
                     credentials: credentials
                 }
             }).success(function (data, status) {
-                if (data.payload.loggedIn == true) {
-                    auth.loggedIn = true;
-                    auth.bucket.token = data.payload.token;
-                }
+                auth.postLogin(data);
+            }).error(function (data, status) {
+                auth.logout();
+            });
+        },
+        postLogin: function(data){
+            var auth = this;
+            if (data.payload.loggedIn == true) {
+                auth.loggedIn = true;
+                auth.bucket.token = data.payload.token;
+                $cookies.cfToken = auth.bucket.token;
+                Navigation.redirect();
+            }else{
+                auth.logout();
+            }
+        },
+        logout: function () {
+            Request.invisible({
+                method: "post",
+                endPoint: "log-out.json"
+            }).success(function (data, status) {
+
             }).error(function (data, status) {
 
             });
-        },
 
-        logout: function () {
-            /**
-             * @todo write an actual logout script
-             */
             this.loggedIn = false;
+            this.bucket.token = null;
+            delete $cookies['cfToken'];
         },
         isLoggedIn: function (redirect) {
+            var auth = this;
             if (typeof(redirect) == 'undefined')
                 redirect = true;
 
+            var cookieToken = $cookies.cfToken;
+            if(typeof(cookieToken) != 'undefined' && this.loggedIn == false){
+                this.loggedIn = true;
+                this.bucket.token = cookieToken;
+
+                Request.invisible({
+                    method: "post",
+                    endPoint: "log-in.json",
+                    data: {
+                        token: this.bucket.token
+                    }
+                }).success(function (data, status) {
+                    auth.postLogin(data);
+                }).error(function (data, status) {
+                    auth.logout();
+                });
+            }
+
             if (this.loggedIn == false) {
-                if (redirect == true)
+                if (redirect == true){
+                    Navigation.redirectTo = $location.path();
                     $location.url('/log-in/')
+                }
             }
             return this.loggedIn;
         }
@@ -456,8 +504,6 @@ function BrowseController($window, Request, $route, $routeParams, $location, Nav
 
     ctrl.navigation = Navigation;
     ctrl.navigation.loadParams($routeParams);
-
-    console.log('ctrl.navigation : ' , ctrl.navigation);
 
     ctrl.table = []
 

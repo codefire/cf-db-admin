@@ -1,0 +1,9 @@
+{
+  "meta":{
+    "version":0.1
+  },
+  "payload":{
+    "loggedIn":false,
+    "token":null
+  }
+}
