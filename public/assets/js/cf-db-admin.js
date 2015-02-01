@@ -12,6 +12,7 @@ angular.module("cf-db", ['ngRoute', 'cf-templates'])
     .controller("DatabaseController", DatabaseController)
     .controller("TableController", TableController)
     .controller("FieldsController", FieldsController)
+    .controller("BrowseController", BrowseController)
 ;
 
 function MainConfig($routeProvider, $locationProvider, $httpProvider) {
@@ -22,16 +23,22 @@ function MainConfig($routeProvider, $locationProvider, $httpProvider) {
             controllerAs: 'databaseCtrl',
             public: false
         })
-        .when('/Databases/:databaseName/Tables/', {
+        .when('/Databases/:database/Tables/', {
             templateUrl: '/cf-templates/Tables.html',
             controller: 'TableController',
             controllerAs: 'tableCtrl',
             public: false
         })
-        .when('/Tables/:tableName/', {
+        .when('/Databases/:database/Tables/:tableName/', {
             templateUrl: '/cf-templates/Fields.html',
             controller: 'FieldsController',
             controllerAs: 'fieldCtrl',
+            public: false
+        })
+        .when('/Databases/:database/Tables/:tableName/browse/', {
+            templateUrl: '/cf-templates/Browse.html',
+            controller: 'BrowseController',
+            controllerAs: 'browseCtrl',
             public: false
         })
         .when('/log-in/', {
@@ -89,7 +96,12 @@ function RequestWrapper($http, Token, Settings) {
 
 function Navigation() {
     return {
-        showView: true
+        showView: true,
+        params: [],
+        loadParams: function(params){
+            this.params = params;
+            return this;
+        }
     };
 }
 
@@ -312,7 +324,9 @@ function MainController($window, Request, $route, $routeParams, $location, Navig
     ctrl.route = $route;
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
+
     ctrl.auth = AuthService;
     ctrl.notifications = Notify;
 
@@ -337,7 +351,8 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.databases = []
 
@@ -371,7 +386,8 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.tables = []
 
@@ -406,7 +422,7 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
 
     ctrl.fields = []
 
@@ -430,7 +446,70 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
     ctrl.loadFields();
 
 };
-angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+
+BrowseController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function BrowseController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+
+    var ctrl;
+    ctrl = this;
+    ctrl.debug = "If you can see this, then BrowseController is working :)";
+    ctrl.dataLoaded = false;
+    ctrl.location = $location.path()
+    ctrl.errors = [];
+
+    ctrl.navigation = Navigation;
+
+    ctrl.fields = []
+    ctrl.rows = []
+
+    ctrl.params = $routeParams;
+    AuthService.isLoggedIn();
+
+    ctrl.loadFields = function () {
+        Request.foreground({
+            method: "post",
+            endPoint: "browse.json",
+            data: {
+                loginData: 'test'
+            }
+        }).success(function (data, status) {
+            ctrl.fields = data.payload.fields;
+            ctrl.rows = data.payload.rows;
+        }).error(function (data, status) {
+
+        });
+    }
+
+    ctrl.loadFields();
+
+};
+
+angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+
+angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("/cf-templates/Browse.html",
+    "<h1>Browse</h1>\n" +
+    "\n" +
+    "<div ng-show=\"browseCtrl.fields\">\n" +
+    "    <table border=\"1\">\n" +
+    "        <thead>\n" +
+    "            <tr>\n" +
+    "                <th ng-repeat=\"field in browseCtrl.fields\">\n" +
+    "                    {{field.name}}\n" +
+    "                </th>\n" +
+    "            </tr>\n" +
+    "        </thead>\n" +
+    "        <tbody>\n" +
+    "            <tr ng-repeat=\"row in browseCtrl.rows\">\n" +
+    "                <td ng-repeat=\"cell in row\">\n" +
+    "                    {{cell.value}}\n" +
+    "                </td>\n" +
+    "            </tr>\n" +
+    "        </tbody>\n" +
+    "    </table>\n" +
+    "\n" +
+    "</div>");
+}]);
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
@@ -510,19 +589,22 @@ angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function(
     "</ul>\n" +
     "\n" +
     "<div ng-show=\"tableCtrl.tables\">\n" +
-    "\n" +
     "    <ul>\n" +
     "        <li ng-repeat=\"table in tableCtrl.tables\">\n" +
-    "           <a href=\"/Tables/{{table.name}}/\">{{table.name}}</a>\n" +
+    "            {{table.name}} -\n" +
+    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\">Structure</a>\n" +
+    "            -\n" +
+    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\">Browse</a>\n" +
     "        </li>\n" +
     "    </ul>\n" +
     "</div>\n" +
     "\n" +
     "<ul>\n" +
-    "    <li ng-repeat=\"(name, param) in tableCtrl.params\">\n" +
+    "    <li ng-repeat=\"(name, param) in tableCtrl.navigation.params\">\n" +
     "        <pre>{{name}} = {{param}}</pre>\n" +
     "    </li>\n" +
-    "</ul>");
+    "</ul>\n" +
+    "");
 }]);
 
 angular.module("cf-db")

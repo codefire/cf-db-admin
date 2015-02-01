@@ -11,6 +11,7 @@ angular.module("cf-db", ['ngRoute', 'cf-templates'])
     .controller("DatabaseController", DatabaseController)
     .controller("TableController", TableController)
     .controller("FieldsController", FieldsController)
+    .controller("BrowseController", BrowseController)
 ;
 
 function MainConfig($routeProvider, $locationProvider, $httpProvider) {
@@ -21,16 +22,22 @@ function MainConfig($routeProvider, $locationProvider, $httpProvider) {
             controllerAs: 'databaseCtrl',
             public: false
         })
-        .when('/Databases/:databaseName/Tables/', {
+        .when('/Databases/:database/Tables/', {
             templateUrl: '/cf-templates/Tables.html',
             controller: 'TableController',
             controllerAs: 'tableCtrl',
             public: false
         })
-        .when('/Tables/:tableName/', {
+        .when('/Databases/:database/Tables/:tableName/', {
             templateUrl: '/cf-templates/Fields.html',
             controller: 'FieldsController',
             controllerAs: 'fieldCtrl',
+            public: false
+        })
+        .when('/Databases/:database/Tables/:tableName/browse/', {
+            templateUrl: '/cf-templates/Browse.html',
+            controller: 'BrowseController',
+            controllerAs: 'browseCtrl',
             public: false
         })
         .when('/log-in/', {
@@ -88,7 +95,12 @@ function RequestWrapper($http, Token, Settings) {
 
 function Navigation() {
     return {
-        showView: true
+        showView: true,
+        params: [],
+        loadParams: function(params){
+            this.params = params;
+            return this;
+        }
     };
 }
 
@@ -311,7 +323,9 @@ function MainController($window, Request, $route, $routeParams, $location, Navig
     ctrl.route = $route;
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
+
     ctrl.auth = AuthService;
     ctrl.notifications = Notify;
 
@@ -336,7 +350,8 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.databases = []
 
@@ -370,7 +385,8 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.tables = []
 
@@ -405,7 +421,7 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
 
     ctrl.fields = []
 
@@ -421,6 +437,43 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
             }
         }).success(function (data, status) {
             ctrl.fields = data.payload.fields;
+        }).error(function (data, status) {
+
+        });
+    }
+
+    ctrl.loadFields();
+
+};
+
+BrowseController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function BrowseController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+
+    var ctrl;
+    ctrl = this;
+    ctrl.debug = "If you can see this, then BrowseController is working :)";
+    ctrl.dataLoaded = false;
+    ctrl.location = $location.path()
+    ctrl.errors = [];
+
+    ctrl.navigation = Navigation;
+
+    ctrl.fields = []
+    ctrl.rows = []
+
+    ctrl.params = $routeParams;
+    AuthService.isLoggedIn();
+
+    ctrl.loadFields = function () {
+        Request.foreground({
+            method: "post",
+            endPoint: "browse.json",
+            data: {
+                loginData: 'test'
+            }
+        }).success(function (data, status) {
+            ctrl.fields = data.payload.fields;
+            ctrl.rows = data.payload.rows;
         }).error(function (data, status) {
 
         });

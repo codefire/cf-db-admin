@@ -1,0 +1,21 @@
+<h1>Browse</h1>
+
+<div ng-show="browseCtrl.fields">
+    <table border="1">
+        <thead>
+            <tr>
+                <th ng-repeat="field in browseCtrl.fields">
+                    {{field.name}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="row in browseCtrl.rows">
+                <td ng-repeat="cell in row">
+                    {{cell.value}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

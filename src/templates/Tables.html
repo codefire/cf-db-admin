@@ -4,16 +4,18 @@
 </ul>
 
 <div ng-show="tableCtrl.tables">
-
     <ul>
         <li ng-repeat="table in tableCtrl.tables">
-           <a href="/Tables/{{table.name}}/">{{table.name}}</a>
+            {{table.name}} -
+            <a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/">Structure</a>
+            -
+            <a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/">Browse</a>
         </li>
     </ul>
 </div>
 
 <ul>
-    <li ng-repeat="(name, param) in tableCtrl.params">
+    <li ng-repeat="(name, param) in tableCtrl.navigation.params">
         <pre>{{name}} = {{param}}</pre>
     </li>
 </ul>
