@@ -1,16 +1,19 @@
 <h1>Browse</h1>
 
-<div ng-show="browseCtrl.fields">
+<div ng-show="browseCtrl.table">
+
+    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.meta.showing}}</strong> rows of <strong>{{browseCtrl.table.meta.total}}</strong></p>
+
     <table border="1">
         <thead>
             <tr>
-                <th ng-repeat="field in browseCtrl.fields">
+                <th ng-repeat="field in browseCtrl.table.fields">
                     {{field.name}}
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in browseCtrl.rows">
+            <tr ng-repeat="row in browseCtrl.table.rows">
                 <td ng-repeat="cell in row">
                     {{cell.value}}
                 </td>

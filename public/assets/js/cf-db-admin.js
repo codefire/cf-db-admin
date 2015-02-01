@@ -29,13 +29,13 @@ function MainConfig($routeProvider, $locationProvider, $httpProvider) {
             controllerAs: 'tableCtrl',
             public: false
         })
-        .when('/Databases/:database/Tables/:tableName/', {
+        .when('/Databases/:database/Tables/:table/', {
             templateUrl: '/cf-templates/Fields.html',
             controller: 'FieldsController',
             controllerAs: 'fieldCtrl',
             public: false
         })
-        .when('/Databases/:database/Tables/:tableName/browse/', {
+        .when('/Databases/:database/Tables/:table/browse/', {
             templateUrl: '/cf-templates/Browse.html',
             controller: 'BrowseController',
             controllerAs: 'browseCtrl',
@@ -356,7 +356,6 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
 
     ctrl.databases = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadDatabases = function () {
@@ -391,7 +390,6 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
 
     ctrl.tables = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadTables = function () {
@@ -423,10 +421,10 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
     ctrl.errors = [];
 
     ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.fields = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadFields = function () {
@@ -458,11 +456,12 @@ function BrowseController($window, Request, $route, $routeParams, $location, Nav
     ctrl.errors = [];
 
     ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
-    ctrl.fields = []
-    ctrl.rows = []
+    console.log('ctrl.navigation : ' , ctrl.navigation);
 
-    ctrl.params = $routeParams;
+    ctrl.table = []
+
     AuthService.isLoggedIn();
 
     ctrl.loadFields = function () {
@@ -473,8 +472,7 @@ function BrowseController($window, Request, $route, $routeParams, $location, Nav
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            ctrl.fields = data.payload.fields;
-            ctrl.rows = data.payload.rows;
+            ctrl.table = data.payload;
         }).error(function (data, status) {
 
         });
@@ -490,17 +488,20 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
   $templateCache.put("/cf-templates/Browse.html",
     "<h1>Browse</h1>\n" +
     "\n" +
-    "<div ng-show=\"browseCtrl.fields\">\n" +
+    "<div ng-show=\"browseCtrl.table\">\n" +
+    "\n" +
+    "    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.meta.showing}}</strong> rows of <strong>{{browseCtrl.table.meta.total}}</strong></p>\n" +
+    "\n" +
     "    <table border=\"1\">\n" +
     "        <thead>\n" +
     "            <tr>\n" +
-    "                <th ng-repeat=\"field in browseCtrl.fields\">\n" +
+    "                <th ng-repeat=\"field in browseCtrl.table.fields\">\n" +
     "                    {{field.name}}\n" +
     "                </th>\n" +
     "            </tr>\n" +
     "        </thead>\n" +
     "        <tbody>\n" +
-    "            <tr ng-repeat=\"row in browseCtrl.rows\">\n" +
+    "            <tr ng-repeat=\"row in browseCtrl.table.rows\">\n" +
     "                <td ng-repeat=\"cell in row\">\n" +
     "                    {{cell.value}}\n" +
     "                </td>\n" +
@@ -548,12 +549,7 @@ angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function(
     "        </li>\n" +
     "    </ul>\n" +
     "</div>\n" +
-    "\n" +
-    "<ul>\n" +
-    "    <li ng-repeat=\"(name, param) in fieldCtrl.params\">\n" +
-    "        <pre>{{name}} = {{param}}</pre>\n" +
-    "    </li>\n" +
-    "</ul>");
+    "");
 }]);
 
 angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function($templateCache) {
