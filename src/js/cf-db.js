@@ -1,4 +1,4 @@
-angular.module("cf-db", ['ngRoute', 'cf-templates'])
+angular.module("cf-db", ['ngRoute', 'ngCookies', 'cf-templates'])
     .config(MainConfig)
     .factory("Settings", SettingService)
     .factory("Token", TokenService)
@@ -11,6 +11,7 @@ angular.module("cf-db", ['ngRoute', 'cf-templates'])
     .controller("DatabaseController", DatabaseController)
     .controller("TableController", TableController)
     .controller("FieldsController", FieldsController)
+    .controller("BrowseController", BrowseController)
 ;
 
 function MainConfig($routeProvider, $locationProvider, $httpProvider) {
@@ -21,16 +22,22 @@ function MainConfig($routeProvider, $locationProvider, $httpProvider) {
             controllerAs: 'databaseCtrl',
             public: false
         })
-        .when('/Databases/:databaseName/Tables/', {
+        .when('/Databases/:database/Tables/', {
             templateUrl: '/cf-templates/Tables.html',
             controller: 'TableController',
             controllerAs: 'tableCtrl',
             public: false
         })
-        .when('/Tables/:tableName/', {
+        .when('/Databases/:database/Tables/:table/', {
             templateUrl: '/cf-templates/Fields.html',
             controller: 'FieldsController',
             controllerAs: 'fieldCtrl',
+            public: false
+        })
+        .when('/Databases/:database/Tables/:table/browse/', {
+            templateUrl: '/cf-templates/Browse.html',
+            controller: 'BrowseController',
+            controllerAs: 'browseCtrl',
             public: false
         })
         .when('/log-in/', {
@@ -56,6 +63,8 @@ function RequestWrapper($http, Token, Settings) {
         foreground: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "foreground";
                     arguments[0].data.auth = Token;
@@ -66,6 +75,8 @@ function RequestWrapper($http, Token, Settings) {
         background: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "background";
                     arguments[0].data.auth = Token;
@@ -76,6 +87,8 @@ function RequestWrapper($http, Token, Settings) {
         invisible: function () {
             if (arguments) {
                 if (arguments[0]) {
+                    if(typeof(arguments[0].data) == 'undefined' || !arguments[0].data)
+                        arguments[0].data = {}
                     arguments[0].url = Settings.apiUrl + Settings.apiType + '/' + arguments[0].endPoint
                     arguments[0].loadType = "invisible";
                     arguments[0].data.auth = Token;
@@ -86,9 +99,21 @@ function RequestWrapper($http, Token, Settings) {
     };
 };
 
-function Navigation() {
+function Navigation($location) {
     return {
-        showView: true
+        showView: true,
+        params: [],
+        redirectTo: null,
+        loadParams: function(params){
+            this.params = params;
+            return this;
+        },
+        redirect: function(){
+            if(this.redirectTo){
+                $location.url(this.redirectTo);
+            }
+            this.redirectTo = null;
+        }
     };
 }
 
@@ -105,35 +130,18 @@ function SettingService() {
     }
 }
 
-function Notify($window) {
+function Notify($window, Settings) {
     return {
-        errors:[],
-        warnings:[],
-        messages:[],
-        error: function(message, data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                console.log('Notify - error : ', message, status, data);
-            }
-
+        errors: [],
+        warnings: [],
+        messages: [],
+        error: function (message, data, status) {
             this.errors.push({
                 message: message
             });
-
-            //if (!status || status === 200) {
-            //    angular.element.growl.error({
-            //        message: message,
-            //        duration: 25000
-            //    });
-            //} else {
-            //    angular.element.growl.error({
-            //        message: message + "status code " + status,
-            //        duration: 25000
-            //    });
-            //}
-
             return this.stackErrors(data);
         },
-        warning: function(message) {
+        warning: function (message) {
             return this.warnings.push({
                 message: message
             });
@@ -142,23 +150,17 @@ function Notify($window) {
             //    duration: 25000
             //});
         },
-        info: function(message) {
+        info: function (message) {
             return this.messages.push({
                 message: message
             });
-            //console.log('Notify.info');
-            //return angular.element.growl.notice({
-            //    message: message,
-            //    duration: 25000
-            //});
         },
-        stackErrors: function(data) {
+        message: function(message) {
+            return this.info(message);
+        },
+        stackErrors: function (data) {
             var error, msg, warning, _i, _j, _k, _l, _len, _len1, _len2, _len3, _len4, _m, _ref, _ref1, _ref2, _ref3, _ref4, _results;
             if (typeof data === 'object' || typeof data === 'array') {
-
-                console.log('Notify.stackErrors', data);
-
-                angular.element('#growls').remove();
                 if (data.errors) {
                     _ref = data.errors;
                     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -204,8 +206,7 @@ function Notify($window) {
                 }
             }
         },
-        loading: function(type, flag) {
-            console.log('Notify.loading');
+        loading: function (type, flag) {
             var workingSelector;
             workingSelector = '#loading-foreground';
             if (type === 'invisible') {
@@ -219,7 +220,10 @@ function Notify($window) {
             }
             return angular.element(workingSelector).toggleClass('showing');
         },
-        clear: function(){
+        notFound: function(endPoint){
+            this.error('API end Point ' + endPoint + ' could not be found at ' + Settings.apiUrl + Settings.apiType + '/' + endPoint)
+        },
+        clear: function () {
             this.errors = [];
             this.warnings = [];
             this.messages = [];
@@ -230,30 +234,32 @@ function Notify($window) {
 
 function HttpInterceptor($q, Notify) {
     return {
-        request: function(config) {
+        request: function (config) {
             Notify.clear();
             Notify.loading(config.loadType, 1);
             return config || $q.when(config);
         },
-        requestError: function(rejection) {
+        requestError: function (rejection) {
             Notify.stackErrors(rejection.data);
             return $q.reject(rejection);
         },
         response: function (response) {
+            var contentType = '';
+            if(typeof(response.headers()['content-type']) != 'undefined')
+                contentType = response.headers()['content-type'];
 
-            Notify.stackErrors(response.data);
-
-            if (response.headers()['content-type'] === "application/json; charset=utf-8") {
+            if (contentType.indexOf('application/json') != -1) {
                 // Validate response, if not ok reject
-                var data = examineJSONResponse(response); // assumes this function is available
+                // var data = examineJSONResponse(response); // assumes this function is available
+                Notify.stackErrors(response.data);
 
-                if (!data)
-                    return $q.reject(response);
+                //if (!data)
+                //    return $q.reject(response);
 
             } else if (typeof(response.config) != 'undefined') {
                 if (typeof(response.config.endPoint) != 'undefined' && response.config.endPoint.indexOf('.json') != -1) {
                     if (response.headers()['content-type'].indexOf('json') == -1) {
-                        Notify.error('API Returned non-JSON response', {}, response.status);
+                        Notify.error('API '+response.config.endPoint+' Returned non-JSON response', {}, response.status);
                         return $q.reject(response);
                     }
                 }
@@ -262,26 +268,27 @@ function HttpInterceptor($q, Notify) {
             return response;
         },
         responseError: function (response) {
-            Notify.loading(rejection.config.loadType, 0);
-            Notify.error(rejection.statusText, rejection.data, rejection.status);
+            Notify.loading(response.config.loadType, 0);
+            if(response.status == 404){
+                Notify.notFound(response.config.endPoint);
+            }else{
+                Notify.error(response.statusText, response.data, response.status);
+            }
+
             // do something on error
             return $q.reject(response);
         }
     };
 }
 
-AuthService.$inject = ["$location", "Token", "Request", "Navigation"];
-function AuthService($location, Token, Request, Navigation) {
+AuthService.$inject = ["$location", "$cookies", "Token", "Request", "Navigation", "Notify"];
+function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
     return {
         loggedIn: false,
         bucket: Token,
 
         login: function (credentials) {
-            /**
-             * @todo write an actual login script
-             */
             var auth = this;
-
             Request.foreground({
                 method: "post",
                 endPoint: "log-in.json",
@@ -289,33 +296,64 @@ function AuthService($location, Token, Request, Navigation) {
                     credentials: credentials
                 }
             }).success(function (data, status) {
-                if (typeof console !== "undefined" && console !== null) {
-                    //console.log('api success', data);
-                }
-                if (data.payload.loggedIn == true) {
-                    auth.loggedIn = true;
-                    auth.bucket.token = data.payload.token;
-                }
+                auth.postLogin(data);
             }).error(function (data, status) {
-                if (typeof console !== "undefined" && console !== null) {
-                    //console.log('api error', data);
-                }
+                auth.logout();
             });
         },
-
+        postLogin: function(data){
+            var auth = this;
+            if (data.payload.loggedIn == true) {
+                auth.loggedIn = true;
+                auth.bucket.token = data.payload.token;
+                $cookies.cfToken = auth.bucket.token;
+                Navigation.redirect();
+            }else{
+                auth.logout();
+            }
+        },
         logout: function () {
-            /**
-             * @todo write an actual logout script
-             */
+            Request.invisible({
+                method: "post",
+                endPoint: "log-out.json"
+            }).success(function (data, status) {
+
+            }).error(function (data, status) {
+
+            });
+
             this.loggedIn = false;
+            this.bucket.token = null;
+            delete $cookies['cfToken'];
         },
         isLoggedIn: function (redirect) {
+            var auth = this;
             if (typeof(redirect) == 'undefined')
                 redirect = true;
 
+            var cookieToken = $cookies.cfToken;
+            if(typeof(cookieToken) != 'undefined' && this.loggedIn == false){
+                this.loggedIn = true;
+                this.bucket.token = cookieToken;
+
+                Request.invisible({
+                    method: "post",
+                    endPoint: "log-in.json",
+                    data: {
+                        token: this.bucket.token
+                    }
+                }).success(function (data, status) {
+                    auth.postLogin(data);
+                }).error(function (data, status) {
+                    auth.logout();
+                });
+            }
+
             if (this.loggedIn == false) {
-                if (redirect == true)
+                if (redirect == true){
+                    Navigation.redirectTo = $location.path();
                     $location.url('/log-in/')
+                }
             }
             return this.loggedIn;
         }
@@ -333,7 +371,9 @@ function MainController($window, Request, $route, $routeParams, $location, Navig
     ctrl.route = $route;
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
+
     ctrl.auth = AuthService;
     ctrl.notifications = Notify;
 
@@ -358,11 +398,11 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.databases = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadDatabases = function () {
@@ -373,14 +413,9 @@ function DatabaseController($window, Request, $route, $routeParams, $location, N
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.databases = data.payload.databases;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
-            }
+
         });
     }
 
@@ -397,11 +432,11 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.tables = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadTables = function () {
@@ -412,14 +447,9 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.tables = data.payload.tables;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
-            }
+
         });
     }
 
@@ -430,8 +460,6 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
 FieldsController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
 function FieldsController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
 
-    console.log('Fields Controller');
-
     var ctrl;
     ctrl = this;
     ctrl.debug = "If you can see this, then FieldsController is working :)";
@@ -439,11 +467,11 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
     ctrl.location = $location.path()
     ctrl.errors = [];
 
-    ctrl.Navigation = Navigation;
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
 
     ctrl.fields = []
 
-    ctrl.params = $routeParams;
     AuthService.isLoggedIn();
 
     ctrl.loadFields = function () {
@@ -454,14 +482,44 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
                 loginData: 'test'
             }
         }).success(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api success', data);
-            }
             ctrl.fields = data.payload.fields;
         }).error(function (data, status) {
-            if (typeof console !== "undefined" && console !== null) {
-                //console.log('api error', data);
+
+        });
+    }
+
+    ctrl.loadFields();
+
+};
+
+BrowseController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function BrowseController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+
+    var ctrl;
+    ctrl = this;
+    ctrl.debug = "If you can see this, then BrowseController is working :)";
+    ctrl.dataLoaded = false;
+    ctrl.location = $location.path()
+    ctrl.errors = [];
+
+    ctrl.navigation = Navigation;
+    ctrl.navigation.loadParams($routeParams);
+
+    ctrl.table = []
+
+    AuthService.isLoggedIn();
+
+    ctrl.loadFields = function () {
+        Request.foreground({
+            method: "post",
+            endPoint: "browse.json",
+            data: {
+                loginData: 'test'
             }
+        }).success(function (data, status) {
+            ctrl.table = data.payload;
+        }).error(function (data, status) {
+
         });
     }
 

@@ -1,4 +1,32 @@
-angular.module('cf-templates', ['/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+
+angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("/cf-templates/Browse.html",
+    "<h1>Browse</h1>\n" +
+    "\n" +
+    "<div ng-show=\"browseCtrl.table\">\n" +
+    "\n" +
+    "    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.meta.showing}}</strong> rows of <strong>{{browseCtrl.table.meta.total}}</strong></p>\n" +
+    "\n" +
+    "    <table border=\"1\">\n" +
+    "        <thead>\n" +
+    "            <tr>\n" +
+    "                <th ng-repeat=\"field in browseCtrl.table.fields\">\n" +
+    "                    {{field.name}}\n" +
+    "                </th>\n" +
+    "            </tr>\n" +
+    "        </thead>\n" +
+    "        <tbody>\n" +
+    "            <tr ng-repeat=\"row in browseCtrl.table.rows\">\n" +
+    "                <td ng-repeat=\"cell in row\">\n" +
+    "                    {{cell.value}}\n" +
+    "                </td>\n" +
+    "            </tr>\n" +
+    "        </tbody>\n" +
+    "    </table>\n" +
+    "\n" +
+    "</div>");
+}]);
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
@@ -37,12 +65,7 @@ angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function(
     "        </li>\n" +
     "    </ul>\n" +
     "</div>\n" +
-    "\n" +
-    "<ul>\n" +
-    "    <li ng-repeat=\"(name, param) in fieldCtrl.params\">\n" +
-    "        <pre>{{name}} = {{param}}</pre>\n" +
-    "    </li>\n" +
-    "</ul>");
+    "");
 }]);
 
 angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function($templateCache) {
@@ -78,17 +101,20 @@ angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function(
     "</ul>\n" +
     "\n" +
     "<div ng-show=\"tableCtrl.tables\">\n" +
-    "\n" +
     "    <ul>\n" +
     "        <li ng-repeat=\"table in tableCtrl.tables\">\n" +
-    "           <a href=\"/Tables/{{table.name}}/\">{{table.name}}</a>\n" +
+    "            {{table.name}} -\n" +
+    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\">Structure</a>\n" +
+    "            -\n" +
+    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\">Browse</a>\n" +
     "        </li>\n" +
     "    </ul>\n" +
     "</div>\n" +
     "\n" +
     "<ul>\n" +
-    "    <li ng-repeat=\"(name, param) in tableCtrl.params\">\n" +
+    "    <li ng-repeat=\"(name, param) in tableCtrl.navigation.params\">\n" +
     "        <pre>{{name}} = {{param}}</pre>\n" +
     "    </li>\n" +
-    "</ul>");
+    "</ul>\n" +
+    "");
 }]);

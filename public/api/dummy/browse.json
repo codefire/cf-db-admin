@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "version": 0.1
+  },
+  "payload": {
+    "name": "A Table Name",
+    "meta": {
+      "showing": 3,
+      "total": 139
+    },
+    "fields": [
+      {
+        "name": "field1",
+        "type": "varchar"
+      },
+      {
+        "name": "my_field",
+        "type": "int"
+      },
+      {
+        "name": "Username",
+        "type": "varchar"
+      },
+      {
+        "name": "legacy_field",
+        "type": "text"
+      },
+      {
+        "name": "Some_Field",
+        "type": "boolean"
+      },
+      {
+        "name": "Counter",
+        "type": "int"
+      }
+    ],
+    "rows": [
+      [
+        {
+          "name": "field1",
+          "value": "hello world"
+        },
+        {
+          "name": "my_field",
+          "value": 556
+        },
+        {
+          "name": "Username",
+          "value": "Edward"
+        },
+        {
+          "name": "legacy_field",
+          "value": "legacy value"
+        },
+        {
+          "name": "Some_Field",
+          "value": false
+        },
+        {
+          "name": "Counter",
+          "value": 998
+        }
+      ],
+      [
+        {
+          "name": "field1",
+          "value": "lorem ipsum"
+        },
+        {
+          "name": "my_field",
+          "value": 9634
+        },
+        {
+          "name": "Username",
+          "value": "Tori"
+        },
+        {
+          "name": "legacy_field",
+          "value": "another legacy value"
+        },
+        {
+          "name": "Some_Field",
+          "value": true
+        },
+        {
+          "name": "Counter",
+          "value": 56
+        }
+      ],
+      [
+        {
+          "name": "field1",
+          "value": "some test text"
+        },
+        {
+          "name": "my_field",
+          "value": 8879556
+        },
+        {
+          "name": "Username",
+          "value": "Victoria"
+        },
+        {
+          "name": "legacy_field",
+          "value": "another legacy value"
+        },
+        {
+          "name": "Some_Field",
+          "value": true
+        },
+        {
+          "name": "Counter",
+          "value": 124
+        }
+      ]
+    ]
+  }
+}

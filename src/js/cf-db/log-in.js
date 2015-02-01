@@ -16,8 +16,6 @@ function LoginController($window, Request, $route, $routeParams, $location, Navi
     ctrl.username = 'demoUser'
     ctrl.password = '123456789'
 
-    console.log('login controller ran');
-
     ctrl.login = function(){
         AuthService.login({
             username: ctrl.username,

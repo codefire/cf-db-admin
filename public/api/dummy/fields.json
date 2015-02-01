@@ -4,7 +4,7 @@
   },
   "payload": {
     "fields": [
-      {"name": "fields1", "type":"varchar"},
+      {"name": "field1", "type":"varchar"},
       {"name": "my_field", "type":"int"},
       {"name": "Username", "type":"varchar"},
       {"name": "legacy_field", "type":"text"},
