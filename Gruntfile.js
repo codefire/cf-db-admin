@@ -108,7 +108,7 @@ module.exports = function (grunt) {
                 }
             },
             templates: {
-                files: 'src/templates/*.html',
+                files: 'src/templates/**/*.html',
                 tasks: ['html2js', 'js'],
                 options: {
                     livereload: true,
