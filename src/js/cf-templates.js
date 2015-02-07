@@ -1,4 +1,4 @@
-angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html']);
+angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html', '/cf-templates/directives/cf-pagination.html']);
 
 angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Browse.html",
@@ -6,7 +6,11 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"browseCtrl.table\">\n" +
     "\n" +
-    "    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.meta.showing}}</strong> rows of <strong>{{browseCtrl.table.meta.total}}</strong></p>\n" +
+    "    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.pagination.showing}}</strong> rows of <strong>{{browseCtrl.table.pagination.total}}</strong></p>\n" +
+    "\n" +
+    "    <div ng-show=\"browseCtrl.table.pagination.pages > 1\">\n" +
+    "        <cf-pagination pagination=\"browseCtrl.table.pagination\" callback=\"browseCtrl.changePage\"></cf-pagination>\n" +
+    "    </div>\n" +
     "\n" +
     "    <table border=\"1\">\n" +
     "        <thead>\n" +
@@ -117,4 +121,21 @@ angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function(
     "    </li>\n" +
     "</ul>\n" +
     "");
+}]);
+
+angular.module("/cf-templates/directives/cf-pagination.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("/cf-templates/directives/cf-pagination.html",
+    "<div>\n" +
+    "    <ul class=\"pagination\">\n" +
+    "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page == 1}\">\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page - 1)\">&laquo;</a>\n" +
+    "        </li>\n" +
+    "        <li ng-repeat=\"number in ctrl.pagination.numbers\" ng-class=\"{current: number == ctrl.pagination.page}\">\n" +
+    "            <a ng-click=\"ctrl.selectPage(number)\">{{number}}</a>\n" +
+    "        </li>\n" +
+    "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page >= ctrl.pagination.pages}\">\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page + 1)\">&raquo;</a>\n" +
+    "        </li>\n" +
+    "    </ul>\n" +
+    "</div>");
 }]);

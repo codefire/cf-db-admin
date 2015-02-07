@@ -12,6 +12,7 @@ angular.module("cf-db", ['ngRoute', 'ngCookies', 'cf-templates'])
     .controller("TableController", TableController)
     .controller("FieldsController", FieldsController)
     .controller("BrowseController", BrowseController)
+    .directive('cfPagination', cfPagination);
 ;
 
 function MainConfig($routeProvider, $locationProvider, $httpProvider) {
@@ -493,8 +494,8 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
 
 };
 
-BrowseController.$inject = ["$window", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
-function BrowseController($window, Request, $route, $routeParams, $location, Navigation, AuthService) {
+BrowseController.$inject = ["$window", "$scope", "Request", "$route", "$routeParams", "$location", "Navigation", "AuthService"];
+function BrowseController($window, $scope,  Request, $route, $routeParams, $location, Navigation, AuthService) {
 
     var ctrl;
     ctrl = this;
@@ -506,27 +507,113 @@ function BrowseController($window, Request, $route, $routeParams, $location, Nav
     ctrl.navigation = Navigation;
     ctrl.navigation.loadParams($routeParams);
 
-    ctrl.table = []
+    ctrl.table = {
+        fields: [],
+        pagination: {
+            page: 1,
+            perPage: 30
+        },
+        rows: []
+    }
 
     AuthService.isLoggedIn();
 
-    ctrl.loadFields = function () {
+    ctrl.loadTable = function () {
         Request.foreground({
             method: "post",
             endPoint: "browse.json",
             data: {
                 database: ctrl.navigation.params.database,
                 table: ctrl.navigation.params.table,
-                page: 1,
-                perPage: 30
+                page: ctrl.table.pagination.page,
+                perPage: ctrl.table.pagination.perPage
             }
         }).success(function (data, status) {
             ctrl.table = data.payload;
+            ctrl.dataLoaded = true;
         }).error(function (data, status) {
 
         });
     }
 
-    ctrl.loadFields();
+    ctrl.changePage = function( number ){
+        ctrl.loadTable();
+    }
+
+    ctrl.loadTable();
 
 };
+
+
+function cfPagination(){
+    var directive = {
+        restrict: 'E',
+        templateUrl: '/cf-templates/directives/cf-pagination.html',
+        scope: {
+            pagination: '=',
+            callback: '='
+        },
+        controller: cfPaginationController,
+        controllerAs: 'ctrl',
+        bindToController: true // because the scope is isolated
+    };
+
+    return directive;
+}
+
+cfPaginationController.$inject = ['$scope'];
+function cfPaginationController($scope){
+    var ctrl = this;
+    ctrl.debug = 'hello from cfPaginationController';
+    ctrl.pagination = {}; // populated from the directive
+    // ctrl.callback; // populated from the directive
+
+    $scope.$watch('ctrl.pagination', function(current, original) {
+        if(original == current){
+            return false;
+        }
+
+        ctrl.buildPagination();
+    });
+
+    ctrl.buildPagination = function(){
+
+        var range = 4;
+
+        var page = ctrl.pagination.page;
+        var pages = ctrl.pagination.pages;
+        var penultimatePage = ctrl.pagination.pages - 1;
+
+        var min = 2;
+        var max = 10;
+
+        var numbers = [1];
+
+
+        for(var i = 1; i <= range; i++){
+            var p = page - i;
+            if(p > 1)
+                numbers.push( p );
+        }
+
+        if(page > 1 && page < pages)
+            numbers.push( page );
+
+        for(var i = 1; i <= range; i++){
+            var p = page + i;
+            if(p < penultimatePage)
+                numbers.push( p );
+        }
+
+        numbers.push(pages);
+        ctrl.pagination.numbers = numbers;
+    }
+
+    ctrl.selectPage = function( newPage ){
+        if(newPage < 1 || newPage > ctrl.pagination.pages)
+            return false;
+
+        ctrl.pagination.page = newPage;
+        ctrl.callback(newPage);
+    }
+}

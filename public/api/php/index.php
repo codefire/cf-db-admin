@@ -56,10 +56,16 @@ switch($command){
 
         $mysqli = getMysqli($dbHost, $dbUsername, $dbPassword, $input->database);
 
+        $input->perPage = !empty($input->perPage) ? $input->perPage : 30;
+        $input->page = !empty($input->page) ? $input->page : 1;
+
         $data['payload'] = [
             'name'=>$input->table,
-            'meta'=>[
-                'showing'=>$input->perPage
+            'pagination'=>[
+                'showing'=>$input->perPage,
+                'page'=>$input->page,
+                'pages'=>0,
+                'total'=>0
             ],
             'fields'=>[],
             'rows'=>[]
@@ -92,7 +98,8 @@ switch($command){
         {
             $result = $mysqli->query($query);
             $row = $result->fetch_assoc();
-            $data['payload']['meta']['total'] = $row['total'];
+            $data['payload']['pagination']['total'] = $row['total'];
+            $data['payload']['pagination']['pages'] = ceil($row['total'] / $input->perPage);
         }
         else
         {
@@ -100,7 +107,11 @@ switch($command){
         }
 
 
-        $query = 'SELECT * FROM `'.$input->table.'` LIMIT 0,30';
+        $offset = 0;
+        if($input->perPage > 1)
+            $offset = ($input->page - 1) * $input->perPage;
+
+        $query = 'SELECT * FROM `'.$input->table.'` LIMIT '.$offset.','.$input->perPage;
         if( $stmt = $mysqli->prepare($query) )
         {
             $result = $mysqli->query($query);

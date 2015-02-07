@@ -4,8 +4,10 @@
   },
   "payload": {
     "name": "A Table Name",
-    "meta": {
+    "pagination": {
       "showing": 3,
+      "page": 1,
+      "pages": 47,
       "total": 139
     },
     "fields": [

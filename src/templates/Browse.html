@@ -2,7 +2,11 @@
 
 <div ng-show="browseCtrl.table">
 
-    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.meta.showing}}</strong> rows of <strong>{{browseCtrl.table.meta.total}}</strong></p>
+    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.pagination.showing}}</strong> rows of <strong>{{browseCtrl.table.pagination.total}}</strong></p>
+
+    <div ng-show="browseCtrl.table.pagination.pages > 1">
+        <cf-pagination pagination="browseCtrl.table.pagination" callback="browseCtrl.changePage"></cf-pagination>
+    </div>
 
     <table border="1">
         <thead>
