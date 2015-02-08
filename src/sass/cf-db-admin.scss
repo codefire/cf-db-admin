@@ -1,5 +1,42 @@
 @import '../../bower_components/cf-css/src/sass/code-fire';
+@import '../../bower_components/foundation-icon-fonts/foundation-icons';
 
-.db-admin-test{
-  color: blue;
+.primary-color {
+  color: $primary-color;
+}
+
+.push-down {
+  margin-bottom: 20px !important;
+}
+
+.squeeze-up {
+  padding-top: 20px !important;
+}
+
+.cf-grid-box {
+  background: $primary-color;
+  padding: 10px 30px;
+  border: 2px solid #ffffff;
+
+  &:hover {
+    background: darken($primary-color, 10%);
+    transition: background-color 300ms ease-out
+  }
+
+  .cf-db-name {
+    color: #ffffff;
+  }
+
+  .cf-db-table-count {
+    color: #ffffff;
+  }
+
+  a {
+    color: #ffffff;
+  }
+
+  i {
+    color: #ffffff;
+    font-size: 1.5em;
+  }
 }
