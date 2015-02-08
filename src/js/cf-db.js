@@ -127,7 +127,7 @@ function TokenService() {
 function SettingService() {
     return {
         apiUrl: '/api/',
-        apiType: 'dummy'
+        apiType: 'php'
     }
 }
 
