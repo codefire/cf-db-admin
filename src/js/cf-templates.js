@@ -9,7 +9,7 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
     "\n" +
     "        <div class=\"row collapse cf-row-count\">\n" +
     "            <div class=\"columns large-6\">\n" +
-    "                <a href=\"/Databases/{{browseCtrl.navigation.params.database}}\" class=\"button left\"><i class=\"fi-arrow-left\"></i> Back to {{browseCtrl.navigation.params.database}} database</a>\n" +
+    "                <a href=\"/Databases/{{browseCtrl.navigation.params.database}}/Tables\" class=\"button left\"><i class=\"fi-arrow-left\"></i> Back to {{browseCtrl.navigation.params.database}} tables</a>\n" +
     "            </div>\n" +
     "            <div class=\"columns large-1 medium-2 small-3\">\n" +
     "                <span class=\"prefix\">Showing</span>\n" +
