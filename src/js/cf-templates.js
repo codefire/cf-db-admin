@@ -5,9 +5,12 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
     "<div ng-show=\"browseCtrl.table\" class=\"row\">\n" +
     "\n" +
     "    <div class=\"columns small-12 cf-browse\">\n" +
-    "    <h2 class=\"text-center-screen\">Browsing table {{browseCtrl.table.name}} in {{browseCtrl.navigation.params.database}}</h2>\n" +
+    "    <h2 class=\"text-center-screen\">Browsing {{browseCtrl.table.name}} table in {{browseCtrl.navigation.params.database}} database</h2>\n" +
     "\n" +
     "        <div class=\"row collapse cf-row-count\">\n" +
+    "            <div class=\"columns large-6\">\n" +
+    "                <a href=\"/Databases/{{browseCtrl.navigation.params.database}}\" class=\"button left\"><i class=\"fi-arrow-left\"></i> Back to {{browseCtrl.navigation.params.database}} database</a>\n" +
+    "            </div>\n" +
     "            <div class=\"columns large-1 medium-2 small-3\">\n" +
     "                <span class=\"prefix\">Showing</span>\n" +
     "            </div>\n" +
@@ -136,19 +139,35 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
 
 angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Fields.html",
-    "<h2>Fields template</h2>\n" +
-    "<ul>\n" +
-    "    <li>debug : {{fieldCtrl.debug}}</li>\n" +
-    "</ul>\n" +
+    "<div class=\"row\" ng-show=\"fieldCtrl.fields\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <h2 class=\"text-center-screen\">Viewing structure of {{fieldCtrl.navigation.params.table}} in {{fieldCtrl.navigation.params.database}}</h2>\n" +
     "\n" +
-    "<div ng-show=\"fieldCtrl.fields\">\n" +
-    "    <ul>\n" +
-    "        <li ng-repeat=\"field in fieldCtrl.fields\">\n" +
-    "           {{field.name}} - {{field.type}}\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
-    "</div>\n" +
-    "");
+    "        <div class=\"row\">\n" +
+    "            <div class=\"columns medium-6\">\n" +
+    "                <a href=\"/Databases/{{fieldCtrl.navigation.params.database}}/Tables/\" class=\"button expand left\"><i class=\"fi-arrow-left\"></i> Back to {{fieldCtrl.navigation.params.database}} tables</a>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"row\">\n" +
+    "            <div class=\"columns large-6\">\n" +
+    "                <table>\n" +
+    "                    <thead>\n" +
+    "                    <th width=\"300\">Name</th>\n" +
+    "                    <th width=\"300\">Type</th>\n" +
+    "                    </thead>\n" +
+    "                    <tbody>\n" +
+    "                    <tr ng-repeat=\"field in fieldCtrl.fields\">\n" +
+    "                        <td>{{field.name}}</td>\n" +
+    "                        <td>{{field.type}}</td>\n" +
+    "                    </tr>\n" +
+    "                    </tbody>\n" +
+    "                </table>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "    </div>\n" +
+    "</div>");
 }]);
 
 angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function($templateCache) {

@@ -8946,16 +8946,23 @@ h1, h2, h3, h4, h5, h6 {
 .cf-table-list i {
   font-size: 1.5em; }
 
-/* line 61, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+/* line 62, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.cf-browse .cf-row-count input {
+  height: 51px; }
+/* line 66, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.cf-browse .cf-row-count .prefix, .cf-browse .cf-row-count .postfix {
+  height: 51px;
+  padding-top: 6px; }
+/* line 71, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
 .cf-browse .cf-row-count .button {
   background: #008CBA;
   color: #ffffff; }
-  /* line 65, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 75, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-browse .cf-row-count .button:hover {
     background: #006687; }
 
 @media only screen and (max-width: 40.063em) {
-  /* line 73, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 83, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .text-center-screen {
     text-align: center; }
  }

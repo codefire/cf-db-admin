@@ -1,12 +1,29 @@
-<h2>Fields template</h2>
-<ul>
-    <li>debug : {{fieldCtrl.debug}}</li>
-</ul>
+<div class="row" ng-show="fieldCtrl.fields">
+    <div class="columns small-12">
+        <h2 class="text-center-screen">Viewing structure of {{fieldCtrl.navigation.params.table}} in {{fieldCtrl.navigation.params.database}}</h2>
 
-<div ng-show="fieldCtrl.fields">
-    <ul>
-        <li ng-repeat="field in fieldCtrl.fields">
-           {{field.name}} - {{field.type}}
-        </li>
-    </ul>
+        <div class="row">
+            <div class="columns medium-6">
+                <a href="/Databases/{{fieldCtrl.navigation.params.database}}/Tables/" class="button expand left"><i class="fi-arrow-left"></i> Back to {{fieldCtrl.navigation.params.database}} tables</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="columns large-6">
+                <table>
+                    <thead>
+                    <th width="300">Name</th>
+                    <th width="300">Type</th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="field in fieldCtrl.fields">
+                        <td>{{field.name}}</td>
+                        <td>{{field.type}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
 </div>

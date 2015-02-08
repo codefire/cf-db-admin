@@ -58,6 +58,16 @@
 
 .cf-browse {
   .cf-row-count {
+
+    input {
+      height: 51px;
+    }
+
+    .prefix, .postfix {
+      height: 51px;
+      padding-top: 6px;
+    }
+
     .button {
       background: $primary-color;
       color: #ffffff;
