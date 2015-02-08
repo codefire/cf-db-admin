@@ -511,7 +511,7 @@ function BrowseController($window, $scope,  Request, $route, $routeParams, $loca
         fields: [],
         pagination: {
             page: 1,
-            perPage: 30
+            showing: 30
         },
         rows: []
     }
@@ -526,7 +526,7 @@ function BrowseController($window, $scope,  Request, $route, $routeParams, $loca
                 database: ctrl.navigation.params.database,
                 table: ctrl.navigation.params.table,
                 page: ctrl.table.pagination.page,
-                perPage: ctrl.table.pagination.perPage
+                perPage: ctrl.table.pagination.showing
             }
         }).success(function (data, status) {
             ctrl.table = data.payload;
