@@ -8946,8 +8946,16 @@ h1, h2, h3, h4, h5, h6 {
 .cf-table-list i {
   font-size: 1.5em; }
 
-@media only screen and (max-width: 640px) {
-  /* line 60, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+/* line 61, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.cf-browse .cf-row-count .button {
+  background: #008CBA;
+  color: #ffffff; }
+  /* line 65, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  .cf-browse .cf-row-count .button:hover {
+    background: #006687; }
+
+@media only screen and (max-width: 40.063em) {
+  /* line 73, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .text-center-screen {
     text-align: center; }
  }

@@ -56,7 +56,20 @@
   }
 }
 
-@media only screen and (max-width: 640px) {
+.cf-browse {
+  .cf-row-count {
+    .button {
+      background: $primary-color;
+      color: #ffffff;
+
+      &:hover {
+        background: darken($primary-color, 10%);
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 40.063em) {
   .text-center-screen {
     text-align: center;
   }

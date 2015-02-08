@@ -2,33 +2,55 @@ angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Data
 
 angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Browse.html",
-    "<h1>Browse</h1>\n" +
+    "<div ng-show=\"browseCtrl.table\" class=\"row\">\n" +
     "\n" +
-    "<div ng-show=\"browseCtrl.table\">\n" +
+    "    <div class=\"columns small-12 cf-browse\">\n" +
+    "    <h2 class=\"text-center-screen\">Browsing table {{browseCtrl.table.name}} in {{browseCtrl.navigation.params.database}}</h2>\n" +
     "\n" +
-    "    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.pagination.showing}}</strong> rows of <strong>{{browseCtrl.table.pagination.total}}</strong></p>\n" +
-    "\n" +
-    "    <div ng-show=\"browseCtrl.table.pagination.pages > 1\">\n" +
-    "        <cf-pagination pagination=\"browseCtrl.table.pagination\" callback=\"browseCtrl.changePage\"></cf-pagination>\n" +
+    "        <div class=\"row collapse cf-row-count\">\n" +
+    "            <div class=\"columns large-1 medium-2 small-3\">\n" +
+    "                <span class=\"prefix\">Showing</span>\n" +
+    "            </div>\n" +
+    "            <div class=\"columns large-1 medium-2 small-2\">\n" +
+    "                <input type=\"text\" ng-model=\"browseCtrl.table.pagination.showing\" class=\"text-center\"/>\n" +
+    "            </div>\n" +
+    "            <div class=\"columns large-2 medium-2 small-5 left\">\n" +
+    "                <span class=\"postfix\">rows of {{browseCtrl.table.pagination.total}}</span>\n" +
+    "            </div>\n" +
+    "            <div class=\"columns large-2 medium-2 small-2 left\">\n" +
+    "                <span class=\"button postfix\" ng-click=\"browseCtrl.loadTable()\">Go</span>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "    </div>\n" +
+    "</div>\n" +
     "\n" +
-    "    <table border=\"1\">\n" +
-    "        <thead>\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <div ng-show=\"browseCtrl.table.pagination.pages > 1\">\n" +
+    "            <cf-pagination pagination=\"browseCtrl.table.pagination\" callback=\"browseCtrl.changePage\"></cf-pagination>\n" +
+    "        </div>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <table>\n" +
+    "            <thead>\n" +
     "            <tr>\n" +
     "                <th ng-repeat=\"field in browseCtrl.table.fields\">\n" +
     "                    {{field.name}}\n" +
     "                </th>\n" +
     "            </tr>\n" +
-    "        </thead>\n" +
-    "        <tbody>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
     "            <tr ng-repeat=\"row in browseCtrl.table.rows\">\n" +
     "                <td ng-repeat=\"cell in row\">\n" +
     "                    {{cell.value}}\n" +
     "                </td>\n" +
     "            </tr>\n" +
-    "        </tbody>\n" +
-    "    </table>\n" +
-    "\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "    </div>\n" +
     "</div>");
 }]);
 
@@ -198,13 +220,13 @@ angular.module("/cf-templates/directives/cf-pagination.html", []).run(["$templat
     "<div>\n" +
     "    <ul class=\"pagination\">\n" +
     "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page == 1}\">\n" +
-    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page - 1)\">&laquo;</a>\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page - 1)\"><i class=\"fi-arrow-left\"></i></a>\n" +
     "        </li>\n" +
     "        <li ng-repeat=\"number in ctrl.pagination.numbers\" ng-class=\"{current: number == ctrl.pagination.page}\">\n" +
     "            <a ng-click=\"ctrl.selectPage(number)\">{{number}}</a>\n" +
     "        </li>\n" +
     "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page >= ctrl.pagination.pages}\">\n" +
-    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page + 1)\">&raquo;</a>\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page + 1)\"><i class=\"fi-arrow-right\"></i></a>\n" +
     "        </li>\n" +
     "    </ul>\n" +
     "</div>");

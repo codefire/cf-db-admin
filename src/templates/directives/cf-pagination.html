@@ -1,13 +1,13 @@
 <div>
     <ul class="pagination">
         <li class="arrow" ng-class="{unavailable: ctrl.pagination.page == 1}">
-            <a ng-click="ctrl.selectPage(ctrl.pagination.page - 1)">&laquo;</a>
+            <a ng-click="ctrl.selectPage(ctrl.pagination.page - 1)"><i class="fi-arrow-left"></i></a>
         </li>
         <li ng-repeat="number in ctrl.pagination.numbers" ng-class="{current: number == ctrl.pagination.page}">
             <a ng-click="ctrl.selectPage(number)">{{number}}</a>
         </li>
         <li class="arrow" ng-class="{unavailable: ctrl.pagination.page >= ctrl.pagination.pages}">
-            <a ng-click="ctrl.selectPage(ctrl.pagination.page + 1)">&raquo;</a>
+            <a ng-click="ctrl.selectPage(ctrl.pagination.page + 1)"><i class="fi-arrow-right"></i></a>
         </li>
     </ul>
 </div>
