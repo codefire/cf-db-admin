@@ -1,17 +1,30 @@
-<h2>Tables template</h2>
-<ul>
-    <li>debug : {{tableCtrl.debug}}</li>
-</ul>
+<div class="row">
+    <div class="columns small-12">
+        <h2 class="text-center-screen">{{tableCtrl.navigation.params.database}} tables</h2>
+    </div>
+</div>
 
-<div ng-show="tableCtrl.tables">
-    <ul>
-        <li ng-repeat="table in tableCtrl.tables">
-            {{table.name}} -
-            <a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/">Structure</a>
-            -
-            <a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/">Browse</a>
-        </li>
-    </ul>
+<div ng-show="tableCtrl.tables" class="row">
+
+    <div class="columns medium-6">
+        <table class="cf-table-list">
+            <thead>
+            <tr>
+                <th width="300">Table</th>
+                <th width="50" class="text-center">Structure</th>
+                <th width="50" class="text-center">Browse</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="table in tableCtrl.tables">
+                <td>{{table.name}}</td>
+                <td class="text-center"><a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/"><i class="fi-list-thumbnails"></i></a></td>
+                <td class="text-center"><a href="/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/"><i class="fi-eye"></i></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 <ul>

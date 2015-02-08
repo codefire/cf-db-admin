@@ -654,17 +654,22 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
-    "<div class=\"row squeeze-up push-down\">\n" +
-    "    <div class=\"columns large-6\">\n" +
-    "        <!--<ul>-->\n" +
-    "            <!--<li>debug : {{databaseCtrl.debug}}</li>-->\n" +
-    "        <!--</ul>-->\n" +
-    "        <a href=\"#\" class=\"button left\"><i class=\"fi-plus\"></i> Create Database</a>\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <h2 class=\"text-center-screen\">Databases</h2>\n" +
+    "    </div>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div class=\"row push-down\">\n" +
+    "    <div class=\"columns medium-6\">\n" +
+    "        <a href=\"#\" class=\"button left expand\"><i class=\"fi-plus\"></i> Create Database</a>\n" +
     "    </div>\n" +
     "\n" +
-    "    <div class=\"columns large-6\">\n" +
-    "        <a href=\"#\" ng-click=\"gridView=true\" class=\"button right\"><i class=\"fi-thumbnails\"></i> Grid View</a>\n" +
-    "        <a href=\"#\" ng-click=\"gridView=false\" class=\"button right\"><i class=\"fi-list\"></i> List View</a>\n" +
+    "    <div class=\"columns medium-3\">\n" +
+    "        <a href=\"#\" ng-click=\"gridView=true\" class=\"button right expand\"><i class=\"fi-thumbnails\"></i> Grid View</a>\n" +
+    "    </div>\n" +
+    "    <div class=\"columns medium-3\">\n" +
+    "        <a href=\"#\" ng-click=\"gridView=false\" class=\"button right expand\"><i class=\"fi-list\"></i> List View</a>\n" +
     "    </div>\n" +
     "</div>\n" +
     "\n" +
@@ -674,39 +679,39 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "    </li>\n" +
     "</ul>\n" +
     "\n" +
-    "<div ng-show=\"gridView\">\n" +
-    "    <div class=\"row\">\n" +
+    "<div ng-show=\"gridView\" class=\"row\">\n" +
     "\n" +
-    "        <div class=\"large-3 small-6 columns left cf-grid-box\" ng-repeat=\"database in databaseCtrl.databases\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <div class=\"large-4 small-6 columns left cf-grid-box\" ng-repeat=\"database in databaseCtrl.databases\">\n" +
     "            <div class=\"row\">\n" +
-    "            <h4 class=\"cf-db-name\"><a href=\"Databases/{{database.name}}/Tables\"></a>{{database.name}}</h4>\n" +
+    "                <h4 class=\"cf-db-name\"><a href=\"Databases/{{database.name}}/Tables\"></a>{{database.name}}</h4>\n" +
     "            </div>\n" +
     "            <div class=\"row\">\n" +
-    "            <h5 class=\"cf-db-table-count\">{{database.tableCount}} tables</h5>\n" +
+    "                <h5 class=\"cf-db-table-count\">{{database.tableCount}} tables</h5>\n" +
     "            </div>\n" +
     "            <div class=\"row\">\n" +
-    "                <div class=\"small-6 columns\">\n" +
+    "                <div class=\"columns small-6 text-center\">\n" +
     "                    <a href=\"Databases/{{database.name}}/Tables\"><i class=\"fi-pencil\"></i></a>\n" +
     "                </div>\n" +
-    "                <div class=\"small-6 columns\">\n" +
+    "                <div class=\"columns small-6 text-centers\">\n" +
     "                    <i class=\"fi-x\"></i>\n" +
     "                </div>\n" +
     "            </div>\n" +
     "        </div>\n" +
-    "\n" +
     "    </div>\n" +
     "\n" +
-    "    <h5 class=\"primary-color\">The idea is that users would be able to colour code their databases in their own colours if they wanted :)</h5>\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-show=\"!gridView\">\n" +
+    "<div ng-show=\"!gridView\" class=\"row\">\n" +
+    "\n" +
+    "    <div class=\"columns medium-6\">\n" +
     "        <table>\n" +
     "            <thead>\n" +
     "            <tr>\n" +
     "                <th width=\"350\">Database</th>\n" +
-    "                <th width=\"100\" class=\"text-center\">Tables</th>\n" +
-    "                <th width=\"150\"></th>\n" +
-    "                <th width=\"150\"></th>\n" +
+    "                <th width=\"50\" class=\"text-center\">Tables</th>\n" +
+    "                <th width=\"50\"></th>\n" +
+    "                <th width=\"50\"></th>\n" +
     "            </tr>\n" +
     "            </thead>\n" +
     "            <tbody>\n" +
@@ -718,8 +723,8 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "            </tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
+    "    </div>\n" +
     "\n" +
-    "    <h5 class=\"primary-color\">This is the boring standard view. Users will be able to choose which view to load on default. Click the grid button!</h5>\n" +
     "</div>\n" +
     "\n" +
     "<script>\n" +
@@ -771,20 +776,33 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
 
 angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Tables.html",
-    "<h2>Tables template</h2>\n" +
-    "<ul>\n" +
-    "    <li>debug : {{tableCtrl.debug}}</li>\n" +
-    "</ul>\n" +
+    "<div class=\"row\">\n" +
+    "    <div class=\"columns small-12\">\n" +
+    "        <h2 class=\"text-center-screen\">{{tableCtrl.navigation.params.database}} tables</h2>\n" +
+    "    </div>\n" +
+    "</div>\n" +
     "\n" +
-    "<div ng-show=\"tableCtrl.tables\">\n" +
-    "    <ul>\n" +
-    "        <li ng-repeat=\"table in tableCtrl.tables\">\n" +
-    "            {{table.name}} -\n" +
-    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\">Structure</a>\n" +
-    "            -\n" +
-    "            <a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\">Browse</a>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
+    "<div ng-show=\"tableCtrl.tables\" class=\"row\">\n" +
+    "\n" +
+    "    <div class=\"columns medium-6\">\n" +
+    "        <table class=\"cf-table-list\">\n" +
+    "            <thead>\n" +
+    "            <tr>\n" +
+    "                <th width=\"300\">Table</th>\n" +
+    "                <th width=\"50\" class=\"text-center\">Structure</th>\n" +
+    "                <th width=\"50\" class=\"text-center\">Browse</th>\n" +
+    "            </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-repeat=\"table in tableCtrl.tables\">\n" +
+    "                <td>{{table.name}}</td>\n" +
+    "                <td class=\"text-center\"><a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\"><i class=\"fi-list-thumbnails\"></i></a></td>\n" +
+    "                <td class=\"text-center\"><a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\"><i class=\"fi-eye\"></i></a></td>\n" +
+    "            </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "    </div>\n" +
+    "\n" +
     "</div>\n" +
     "\n" +
     "<ul>\n" +

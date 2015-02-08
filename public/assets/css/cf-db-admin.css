@@ -8911,26 +8911,45 @@ h1, h2, h3, h4, h5, h6 {
   padding-top: 20px !important; }
 
 /* line 16, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.line-up-left {
+  padding-left: 0; }
+
+/* line 20, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.line-up-right {
+  padding-right: 0; }
+
+/* line 24, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
 .cf-grid-box {
   background: #008CBA;
   padding: 10px 30px;
   border: 2px solid #ffffff; }
-  /* line 21, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 29, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-grid-box:hover {
     background: #006687;
     transition: background-color 300ms ease-out; }
-  /* line 26, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 34, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-grid-box .cf-db-name {
-    color: #ffffff; }
-  /* line 30, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+    color: #ffffff;
+    font-size: 1.2em; }
+  /* line 39, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-grid-box .cf-db-table-count {
     color: #ffffff; }
-  /* line 34, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 43, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-grid-box a {
     color: #ffffff; }
-  /* line 38, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  /* line 47, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
   .cf-grid-box i {
     color: #ffffff;
     font-size: 1.5em; }
+
+/* line 54, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+.cf-table-list i {
+  font-size: 1.5em; }
+
+@media only screen and (max-width: 640px) {
+  /* line 60, /Users/salmaalamnaylor/Sites/codefire/cf-db-admin/src/sass/cf-db-admin.scss */
+  .text-center-screen {
+    text-align: center; }
+ }
 
 /*# sourceMappingURL=cf-db-admin.css.map */

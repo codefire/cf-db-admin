@@ -1,14 +1,19 @@
-<div class="row squeeze-up push-down">
-    <div class="columns large-6">
-        <!--<ul>-->
-            <!--<li>debug : {{databaseCtrl.debug}}</li>-->
-        <!--</ul>-->
-        <a href="#" class="button left"><i class="fi-plus"></i> Create Database</a>
+<div class="row">
+    <div class="columns small-12">
+        <h2 class="text-center-screen">Databases</h2>
+    </div>
+</div>
+
+<div class="row push-down">
+    <div class="columns medium-6">
+        <a href="#" class="button left expand"><i class="fi-plus"></i> Create Database</a>
     </div>
 
-    <div class="columns large-6">
-        <a href="#" ng-click="gridView=true" class="button right"><i class="fi-thumbnails"></i> Grid View</a>
-        <a href="#" ng-click="gridView=false" class="button right"><i class="fi-list"></i> List View</a>
+    <div class="columns medium-3">
+        <a href="#" ng-click="gridView=true" class="button right expand"><i class="fi-thumbnails"></i> Grid View</a>
+    </div>
+    <div class="columns medium-3">
+        <a href="#" ng-click="gridView=false" class="button right expand"><i class="fi-list"></i> List View</a>
     </div>
 </div>
 
@@ -18,39 +23,39 @@
     </li>
 </ul>
 
-<div ng-show="gridView">
-    <div class="row">
+<div ng-show="gridView" class="row">
 
-        <div class="large-3 small-6 columns left cf-grid-box" ng-repeat="database in databaseCtrl.databases">
+    <div class="columns small-12">
+        <div class="large-4 small-6 columns left cf-grid-box" ng-repeat="database in databaseCtrl.databases">
             <div class="row">
-            <h4 class="cf-db-name"><a href="Databases/{{database.name}}/Tables"></a>{{database.name}}</h4>
+                <h4 class="cf-db-name"><a href="Databases/{{database.name}}/Tables"></a>{{database.name}}</h4>
             </div>
             <div class="row">
-            <h5 class="cf-db-table-count">{{database.tableCount}} tables</h5>
+                <h5 class="cf-db-table-count">{{database.tableCount}} tables</h5>
             </div>
             <div class="row">
-                <div class="small-6 columns">
+                <div class="columns small-6 text-center">
                     <a href="Databases/{{database.name}}/Tables"><i class="fi-pencil"></i></a>
                 </div>
-                <div class="small-6 columns">
+                <div class="columns small-6 text-centers">
                     <i class="fi-x"></i>
                 </div>
             </div>
         </div>
-
     </div>
 
-    <h5 class="primary-color">The idea is that users would be able to colour code their databases in their own colours if they wanted :)</h5>
 </div>
 
-<div ng-show="!gridView">
+<div ng-show="!gridView" class="row">
+
+    <div class="columns medium-6">
         <table>
             <thead>
             <tr>
                 <th width="350">Database</th>
-                <th width="100" class="text-center">Tables</th>
-                <th width="150"></th>
-                <th width="150"></th>
+                <th width="50" class="text-center">Tables</th>
+                <th width="50"></th>
+                <th width="50"></th>
             </tr>
             </thead>
             <tbody>
@@ -62,8 +67,8 @@
             </tr>
             </tbody>
         </table>
+    </div>
 
-    <h5 class="primary-color">This is the boring standard view. Users will be able to choose which view to load on default. Click the grid button!</h5>
 </div>
 
 <script>

@@ -13,6 +13,14 @@
   padding-top: 20px !important;
 }
 
+.line-up-left {
+  padding-left: 0;
+}
+
+.line-up-right {
+  padding-right: 0;
+}
+
 .cf-grid-box {
   background: $primary-color;
   padding: 10px 30px;
@@ -25,6 +33,7 @@
 
   .cf-db-name {
     color: #ffffff;
+    font-size: 1.2em;
   }
 
   .cf-db-table-count {
@@ -38,5 +47,17 @@
   i {
     color: #ffffff;
     font-size: 1.5em;
+  }
+}
+
+.cf-table-list {
+  i {
+    font-size: 1.5em;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .text-center-screen {
+    text-align: center;
   }
 }
