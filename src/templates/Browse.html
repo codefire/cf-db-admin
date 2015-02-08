@@ -1,28 +1,50 @@
-<h1>Browse</h1>
+<div ng-show="browseCtrl.table" class="row">
 
-<div ng-show="browseCtrl.table">
+    <div class="columns small-12 cf-browse">
+    <h2 class="text-center-screen">Browsing table {{browseCtrl.table.name}} in {{browseCtrl.navigation.params.database}}</h2>
 
-    <p>Browsing table : <strong>{{browseCtrl.table.name}}</strong> - showing <strong>{{browseCtrl.table.pagination.showing}}</strong> rows of <strong>{{browseCtrl.table.pagination.total}}</strong></p>
-
-    <div ng-show="browseCtrl.table.pagination.pages > 1">
-        <cf-pagination pagination="browseCtrl.table.pagination" callback="browseCtrl.changePage"></cf-pagination>
+        <div class="row collapse cf-row-count">
+            <div class="columns large-1 medium-2 small-3">
+                <span class="prefix">Showing</span>
+            </div>
+            <div class="columns large-1 medium-2 small-2">
+                <input type="text" ng-model="browseCtrl.table.pagination.showing" class="text-center"/>
+            </div>
+            <div class="columns large-2 medium-2 small-5 left">
+                <span class="postfix">rows of {{browseCtrl.table.pagination.total}}</span>
+            </div>
+            <div class="columns large-2 medium-2 small-2 left">
+                <span class="button postfix" ng-click="browseCtrl.loadTable()">Go</span>
+            </div>
+        </div>
     </div>
+</div>
 
-    <table border="1">
-        <thead>
+<div class="row">
+    <div class="columns small-12">
+        <div ng-show="browseCtrl.table.pagination.pages > 1">
+            <cf-pagination pagination="browseCtrl.table.pagination" callback="browseCtrl.changePage"></cf-pagination>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="columns small-12">
+        <table>
+            <thead>
             <tr>
                 <th ng-repeat="field in browseCtrl.table.fields">
                     {{field.name}}
                 </th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr ng-repeat="row in browseCtrl.table.rows">
                 <td ng-repeat="cell in row">
                     {{cell.value}}
                 </td>
             </tr>
-        </tbody>
-    </table>
-
+            </tbody>
+        </table>
+    </div>
 </div>
