@@ -445,7 +445,7 @@ function TableController($window, Request, $route, $routeParams, $location, Navi
             method: "post",
             endPoint: "tables.json",
             data: {
-                loginData: 'test'
+                database: ctrl.navigation.params.database
             }
         }).success(function (data, status) {
             ctrl.tables = data.payload.tables;
@@ -480,7 +480,8 @@ function FieldsController($window, Request, $route, $routeParams, $location, Nav
             method: "post",
             endPoint: "fields.json",
             data: {
-                loginData: 'test'
+                database: ctrl.navigation.params.database,
+                table: ctrl.navigation.params.table
             }
         }).success(function (data, status) {
             ctrl.fields = data.payload.fields;
@@ -515,7 +516,10 @@ function BrowseController($window, Request, $route, $routeParams, $location, Nav
             method: "post",
             endPoint: "browse.json",
             data: {
-                loginData: 'test'
+                database: ctrl.navigation.params.database,
+                table: ctrl.navigation.params.table,
+                page: 1,
+                perPage: 30
             }
         }).success(function (data, status) {
             ctrl.table = data.payload;
