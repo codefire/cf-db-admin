@@ -761,7 +761,7 @@ angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function(
   $templateCache.put("/cf-templates/Fields.html",
     "<div class=\"row\" ng-show=\"fieldCtrl.fields\">\n" +
     "    <div class=\"columns small-12\">\n" +
-    "        <h2 class=\"text-center-screen\">Viewing structure of {{fieldCtrl.navigation.params.table}} in {{fieldCtrl.navigation.params.database}}</h2>\n" +
+    "        <h2 class=\"text-center-screen\">Viewing structure of {{fieldCtrl.navigation.params.table}} table in {{fieldCtrl.navigation.params.database}} database</h2>\n" +
     "\n" +
     "        <div class=\"row\">\n" +
     "            <div class=\"columns medium-6\">\n" +
