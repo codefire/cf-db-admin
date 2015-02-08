@@ -1,15 +1,15 @@
-<h2>Databases template</h2>
-<ul>
-    <li>debug : {{databaseCtrl.debug}}</li>
-</ul>
+<div class="row squeeze-up push-down">
+    <div class="columns large-6">
+        <!--<ul>-->
+            <!--<li>debug : {{databaseCtrl.debug}}</li>-->
+        <!--</ul>-->
+        <a href="#" class="button left"><i class="fi-plus"></i> Create Database</a>
+    </div>
 
-<div ng-show="databaseCtrl.databases">
-
-    <ul>
-        <li ng-repeat="database in databaseCtrl.databases">
-           <a href="/Databases/{{database.name}}/Tables/">{{database.name}}</a>
-        </li>
-    </ul>
+    <div class="columns large-6">
+        <a href="#" ng-click="gridView=true" class="button right"><i class="fi-thumbnails"></i> Grid View</a>
+        <a href="#" ng-click="gridView=false" class="button right"><i class="fi-list"></i> List View</a>
+    </div>
 </div>
 
 <ul>
@@ -17,3 +17,55 @@
         <pre>{{name}} = {{param}}</pre>
     </li>
 </ul>
+
+<div ng-show="gridView">
+    <div class="row">
+
+        <div class="large-3 small-6 columns left cf-grid-box" ng-repeat="database in databaseCtrl.databases">
+            <div class="row">
+            <h4 class="cf-db-name"><a href="Databases/{{database.name}}/Tables"></a>{{database.name}}</h4>
+            </div>
+            <div class="row">
+            <h5 class="cf-db-table-count">{{database.tableCount}} tables</h5>
+            </div>
+            <div class="row">
+                <div class="small-6 columns">
+                    <a href="Databases/{{database.name}}/Tables"><i class="fi-pencil"></i></a>
+                </div>
+                <div class="small-6 columns">
+                    <i class="fi-x"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <h5 class="primary-color">The idea is that users would be able to colour code their databases in their own colours if they wanted :)</h5>
+</div>
+
+<div ng-show="!gridView">
+        <table>
+            <thead>
+            <tr>
+                <th width="350">Database</th>
+                <th width="100" class="text-center">Tables</th>
+                <th width="150"></th>
+                <th width="150"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="database in databaseCtrl.databases">
+                <td>{{database.name}}</td>
+                <td class="text-center">{{database.tableCount}}</td>
+                <td class="text-center"><a href="Databases/{{database.name}}/Tables"><i class="fi-pencil"></i></a></td>
+                <td class="text-center"><i class="fi-x"></i></td>
+            </tr>
+            </tbody>
+        </table>
+
+    <h5 class="primary-color">This is the boring standard view. Users will be able to choose which view to load on default. Click the grid button!</h5>
+</div>
+
+<script>
+    $(document).foundation();
+</script>

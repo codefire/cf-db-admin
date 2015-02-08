@@ -30,25 +30,77 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
-    "<h2>Databases template</h2>\n" +
-    "<ul>\n" +
-    "    <li>debug : {{databaseCtrl.debug}}</li>\n" +
-    "</ul>\n" +
+    "<div class=\"row squeeze-up push-down\">\n" +
+    "    <div class=\"columns large-6\">\n" +
+    "        <!--<ul>-->\n" +
+    "            <!--<li>debug : {{databaseCtrl.debug}}</li>-->\n" +
+    "        <!--</ul>-->\n" +
+    "        <a href=\"#\" class=\"button left\"><i class=\"fi-plus\"></i> Create Database</a>\n" +
+    "    </div>\n" +
     "\n" +
-    "<div ng-show=\"databaseCtrl.databases\">\n" +
-    "\n" +
-    "    <ul>\n" +
-    "        <li ng-repeat=\"database in databaseCtrl.databases\">\n" +
-    "           <a href=\"/Databases/{{database.name}}/Tables/\">{{database.name}}</a>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
+    "    <div class=\"columns large-6\">\n" +
+    "        <a href=\"#\" ng-click=\"gridView=true\" class=\"button right\"><i class=\"fi-thumbnails\"></i> Grid View</a>\n" +
+    "        <a href=\"#\" ng-click=\"gridView=false\" class=\"button right\"><i class=\"fi-list\"></i> List View</a>\n" +
+    "    </div>\n" +
     "</div>\n" +
     "\n" +
     "<ul>\n" +
     "    <li ng-repeat=\"(name, param) in databaseCtrl.params\">\n" +
     "        <pre>{{name}} = {{param}}</pre>\n" +
     "    </li>\n" +
-    "</ul>");
+    "</ul>\n" +
+    "\n" +
+    "<div ng-show=\"gridView\">\n" +
+    "    <div class=\"row\">\n" +
+    "\n" +
+    "        <div class=\"large-3 small-6 columns left cf-grid-box\" ng-repeat=\"database in databaseCtrl.databases\">\n" +
+    "            <div class=\"row\">\n" +
+    "            <h4 class=\"cf-db-name\"><a href=\"Databases/{{database.name}}/Tables\"></a>{{database.name}}</h4>\n" +
+    "            </div>\n" +
+    "            <div class=\"row\">\n" +
+    "            <h5 class=\"cf-db-table-count\">{{database.tableCount}} tables</h5>\n" +
+    "            </div>\n" +
+    "            <div class=\"row\">\n" +
+    "                <div class=\"small-6 columns\">\n" +
+    "                    <a href=\"Databases/{{database.name}}/Tables\"><i class=\"fi-pencil\"></i></a>\n" +
+    "                </div>\n" +
+    "                <div class=\"small-6 columns\">\n" +
+    "                    <i class=\"fi-x\"></i>\n" +
+    "                </div>\n" +
+    "            </div>\n" +
+    "        </div>\n" +
+    "\n" +
+    "    </div>\n" +
+    "\n" +
+    "    <h5 class=\"primary-color\">The idea is that users would be able to colour code their databases in their own colours if they wanted :)</h5>\n" +
+    "</div>\n" +
+    "\n" +
+    "<div ng-show=\"!gridView\">\n" +
+    "        <table>\n" +
+    "            <thead>\n" +
+    "            <tr>\n" +
+    "                <th width=\"350\">Database</th>\n" +
+    "                <th width=\"100\" class=\"text-center\">Tables</th>\n" +
+    "                <th width=\"150\"></th>\n" +
+    "                <th width=\"150\"></th>\n" +
+    "            </tr>\n" +
+    "            </thead>\n" +
+    "            <tbody>\n" +
+    "            <tr ng-repeat=\"database in databaseCtrl.databases\">\n" +
+    "                <td>{{database.name}}</td>\n" +
+    "                <td class=\"text-center\">{{database.tableCount}}</td>\n" +
+    "                <td class=\"text-center\"><a href=\"Databases/{{database.name}}/Tables\"><i class=\"fi-pencil\"></i></a></td>\n" +
+    "                <td class=\"text-center\"><i class=\"fi-x\"></i></td>\n" +
+    "            </tr>\n" +
+    "            </tbody>\n" +
+    "        </table>\n" +
+    "\n" +
+    "    <h5 class=\"primary-color\">This is the boring standard view. Users will be able to choose which view to load on default. Click the grid button!</h5>\n" +
+    "</div>\n" +
+    "\n" +
+    "<script>\n" +
+    "    $(document).foundation();\n" +
+    "</script>");
 }]);
 
 angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function($templateCache) {

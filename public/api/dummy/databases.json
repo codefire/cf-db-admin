@@ -4,12 +4,12 @@
   },
   "payload": {
     "databases": [
-      {"name": "WordPress"},
-      {"name": "MyBigDB"},
-      {"name": "phpbb"},
-      {"name": "MyCms"},
-      {"name": "Some_Db"},
-      {"name": "My Database"}
+      {"name": "WordPress", "tableCount": "2"},
+      {"name": "MyBigDB", "tableCount": "4"},
+      {"name": "phpbb", "tableCount": "16"},
+      {"name": "MyCms", "tableCount": "10"},
+      {"name": "Some_Db", "tableCount": "9"},
+      {"name": "My Database", "tableCount": "1"}
     ]
   }
 }
