@@ -17,10 +17,7 @@ module.exports = function (grunt) {
         sass: {
             codefire: {
                 options: {
-                    style: 'expanded',
-                    sourcemap: true,
-                    sourceComments: 'map',
-                    lineNumbers: true
+                    style: 'nested'
                 },
                 files: {
                     'public/assets/css/cf-db-admin.css': 'src/sass/cf-db-admin.scss'
