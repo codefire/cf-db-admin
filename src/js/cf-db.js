@@ -1,4 +1,4 @@
-angular.module("cf-db", ['ngRoute', 'ngCookies', 'cf-templates'])
+angular.module("cf-db", ['ngRoute', 'ngAnimate', 'ngCookies', 'ngMaterial', 'cf-templates'])
     .config(MainConfig)
     .factory("Settings", SettingService)
     .factory("Token", TokenService)
@@ -219,7 +219,8 @@ function Notify($window, Settings) {
             if (flag !== 1 && flag !== true) {
                 flag = 0;
             }
-            return angular.element(workingSelector).toggleClass('showing');
+            var test = 1;
+            // return angular.element(workingSelector).toggleClass('showing');
         },
         notFound: function(endPoint){
             this.error('API end Point ' + endPoint + ' could not be found at ' + Settings.apiUrl + Settings.apiType + '/' + endPoint)
@@ -617,3 +618,40 @@ function cfPaginationController($scope){
         ctrl.callback(newPage);
     }
 }
+
+angular
+    .module('cf-db')
+    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+        $scope.toggleLeft = buildToggler('left');
+        $scope.toggleRight = buildToggler('right');
+        /**
+         * Build handler to open/close a SideNav; when animation finishes
+         * report completion in console
+         */
+        function buildToggler(navID) {
+            var debounceFn =  $mdUtil.debounce(function(){
+                $mdSidenav(navID)
+                    .toggle()
+                    .then(function () {
+                        $log.debug("toggle " + navID + " is done");
+                    });
+            },200);
+            return debounceFn;
+        }
+    })
+    .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+        $scope.close = function () {
+            $mdSidenav('left').close()
+                .then(function () {
+                    $log.debug("close LEFT is done");
+                });
+        };
+    })
+    .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+        $scope.close = function () {
+            $mdSidenav('right').close()
+                .then(function () {
+                    $log.debug("close RIGHT is done");
+                });
+        };
+    });

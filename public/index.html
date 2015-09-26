@@ -6,7 +6,7 @@
 <!--[if IE 8]>
 <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
-<html class="no-js"> <!--<![endif]-->
+<html class="no-js" ng-app="cf-db"> <!--<![endif]-->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -16,146 +16,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="assets/css/cf-db-admin.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
 
     <script>document.write('<script id="LiveReloadScript" src="http://127.0.0.1:35729/livereload.js?snipver=1"></' + 'script>')</script>
 
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/foundation.min.js"></script>
+    <!--<script src="assets/js/jquery.min.js"></script>-->
+    <!--<script src="assets/js/foundation.min.js"></script>-->
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/cf-db-admin.js"></script>
 
 </head>
-<body ng-app="cf-db">
+<body class="layout layout-row">
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
 <![endif]-->
-<div ng-controller="MainController as main">
 
-    <div class="off-canvas-wrap" data-offcanvas>
-        <div class="inner-wrap">
+<div ng-controller="MainController as main" layout="column" style="height: 100%;">
 
-            <!-- Off Canvas Menu -->
-            <aside class="right-off-canvas-menu">
-                <!-- whatever you want goes here -->
-                <div class="panel">
-                    <h3>API Type</h3>
+<div ng-controller="AppCtrl" layout="column" style="height: 100%;">
+    <section layout="row" flex>
+        <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+            <md-toolbar class="md-theme-indigo">
+                <h1 class="md-toolbar-tools">Sidenav Left</h1>
+            </md-toolbar>
+            <md-content ng-controller="LeftCtrl"> <!-- layout-padding -->
+                <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                    Close Sidenav Left
+                </md-button>
+                <ul class="right">
+                    <li><a href="/">Home</a></li>
 
-                    <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
-                    <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="php"/> php API</label>
-
-                    <ul>
-                        <li><a href="#">Item 1</a></li>
-                    </ul>
-                </div>
-            </aside>
-
-            <div class="contain-to-grid sticky">
-                <nav class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">
-                    <ul class="title-area">
-                        <li class="name">
-                            <h1><a href="/"> Database Admin
-                                <small>by Code Fire</small>
-                            </a>
-                            </h1>
-
-                        </li>
-                        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-                    </ul>
-
-                    <section class="top-bar-section">
-                        <ul class="right">
-                            <li><a href="/">Home</a></li>
-
-                            <li class="has-dropdown" ng-show="main.auth.loggedIn">
-                                <a href="#">Quick Links</a>
-                                <ul class="dropdown">
-                                    <li><a href="/Databases/">Databases</a></li>
-                                </ul>
-                            </li>
-
-                            <li ng-show="main.auth.loggedIn"><a href="/log-in/" ng-click="main.logout()">Log Out</a></li>
-                            <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
-                            <li><a class="right-off-canvas-toggle" href="#">Settings</a></li>
+                    <li class="has-dropdown" ng-show="main.auth.loggedIn">
+                        <a href="#">Quick Links</a>
+                        <ul class="dropdown">
+                            <li><a href="/Databases/">Databases</a></li>
                         </ul>
+                    </li>
 
-                    </section>
-                </nav>
-            </div>
+                    <li ng-show="main.auth.loggedIn"><a href="/log-in/" ng-click="main.logout()">Log Out</a></li>
+                    <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
 
-            <div class="row">
-
-                <div class="small-12 columns" role="content">
-                    <div ng-show="main.notifications">
-                        <div ng-show="main.notifications.errors">
-                            <div class="alert label" ng-repeat="error in main.notifications.errors">
-                                {{error.message}}
-                            </div>
-                        </div>
-                        <div ng-show="main.notifications.warnings">
-                            <div class="secondary label" ng-repeat="warning in main.notifications.warnings">
-                                {{warning.message}}
-                            </div>
-                        </div>
-                        <div ng-show="main.notifications.messages">
-                            <div class="label" ng-repeat="msg in main.notifications.messages">
-                                {{msg.message}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div ng-view>
-
-                        <!-- TEMPLATES FROM THE TEMPLATE DIRECTORY GET INJECTED HERE -->
-
-                    </div>
+                    <li>
+                        <md-button ng-click="toggleRight()" class="md-primary">
+                            Settings
+                        </md-button>
+                    </li>
+                </ul>
+            </md-content>
+        </md-sidenav>
+        <md-content flex>
+            <!--layout-padding-->
+            <div layout="column" layout-fill layout-align="top center">
+                <div>
+                    <md-button ng-click="toggleLeft()" class="md-primary" hide-gt-md>
+                        Menu
+                    </md-button>
                 </div>
 
-                <!--<aside class="large-3 columns">-->
-                    <!--<ul>-->
-                        <!--<li>api type : {{main.settings.apiType}}</li>-->
-                        <!--<li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>-->
-                        <!--<li>main.auth.token: {{main.auth.bucket.token}}</li>-->
-                        <!--<li>main.location.path(): {{main.location.path()}}</li>-->
-                        <!--<li>main.navigation.redirectTo: {{main.navigation.redirectTo}}</li>-->
-                        <!--<li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>-->
-                    <!--</ul>-->
-                <!--</aside>-->
+                <div ng-view>
+
+                    <!-- TEMPLATES FROM THE TEMPLATE DIRECTORY GET INJECTED HERE -->
+
+                </div>
 
             </div>
+            <div flex></div>
+        </md-content>
+        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+            <md-toolbar class="md-theme-light">
+                <h1 class="md-toolbar-tools">Sidenav Right</h1>
+            </md-toolbar>
+            <md-content ng-controller="RightCtrl" layout-padding>
+                <form>
+                    <md-input-container>
+                        <label for="testInput">Test input</label>
+                        <input type="text" id="testInput"
+                                ng-model="data" md-autofocus>
+                    </md-input-container>
+                </form>
 
-            <footer class="row">
-                <div class="large-12 columns">
-                    <hr/>
-                    <div class="row">
-                        <div class="large-6 columns">
-                            <p></p>
-                        </div>
-                        <div class="large-6 columns">
-                            <ul class="inline-list right">
-                                <li><a href="#">Link 1</a></li>
-                                <li><a href="#">Link 2</a></li>
-                                <li><a href="#">Link 3</a></li>
-                                <li><a href="#">Link 4</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-            <!-- close the off-canvas menu -->
-            <a class="exit-off-canvas"></a>
+                <h3>API Type</h3>
 
-        </div>
-    </div>
+                <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
+                <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="php"/> php API</label>
 
+                <ul>
+                    <li><a href="#">Item 1</a></li>
+                </ul>
+
+                <md-button ng-click="close()" class="md-primary">
+                    Close Sidenav Right
+                </md-button>
+            </md-content>
+        </md-sidenav>
+    </section>
+</div>
 
 </div>
 <!-- end MainController -->
 
 
 <script>
-    $(document).foundation();
+    // $(document).foundation();
 </script>
 
 </body>

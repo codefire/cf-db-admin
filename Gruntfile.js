@@ -20,7 +20,8 @@ module.exports = function (grunt) {
                     style: 'nested'
                 },
                 files: {
-                    'public/assets/css/cf-db-admin.css': 'src/sass/cf-db-admin.scss'
+                    'public/assets/css/cf-db-admin.css': ['src/sass/cf-db-admin.scss']
+                    //'public/assets/css/cf-db-admin.css': 'src/sass/cf-db-admin.scss'
                 }
             }
         },
@@ -41,7 +42,10 @@ module.exports = function (grunt) {
                 src: [
                     bowerPath + 'angular/angular.js',
                     bowerPath + 'angular-route/angular-route.js',
-                    bowerPath + 'angular-cookies/angular-cookies.js'
+                    bowerPath + 'angular-cookies/angular-cookies.js',
+                    bowerPath + 'angular-animate/angular-animate.js',
+                    bowerPath + 'angular-aria/angular-aria.js',
+                    bowerPath + 'angular-material/angular-material.js'
                 ],
                 dest: 'public/assets/js/angular.js'
             },

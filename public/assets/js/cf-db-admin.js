@@ -1,5 +1,5 @@
 
-angular.module("cf-db", ['ngRoute', 'ngCookies', 'cf-templates'])
+angular.module("cf-db", ['ngRoute', 'ngAnimate', 'ngCookies', 'ngMaterial', 'cf-templates'])
     .config(MainConfig)
     .factory("Settings", SettingService)
     .factory("Token", TokenService)
@@ -220,7 +220,8 @@ function Notify($window, Settings) {
             if (flag !== 1 && flag !== true) {
                 flag = 0;
             }
-            return angular.element(workingSelector).toggleClass('showing');
+            var test = 1;
+            // return angular.element(workingSelector).toggleClass('showing');
         },
         notFound: function(endPoint){
             this.error('API end Point ' + endPoint + ' could not be found at ' + Settings.apiUrl + Settings.apiType + '/' + endPoint)
@@ -618,6 +619,43 @@ function cfPaginationController($scope){
         ctrl.callback(newPage);
     }
 }
+
+angular
+    .module('cf-db')
+    .controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+        $scope.toggleLeft = buildToggler('left');
+        $scope.toggleRight = buildToggler('right');
+        /**
+         * Build handler to open/close a SideNav; when animation finishes
+         * report completion in console
+         */
+        function buildToggler(navID) {
+            var debounceFn =  $mdUtil.debounce(function(){
+                $mdSidenav(navID)
+                    .toggle()
+                    .then(function () {
+                        $log.debug("toggle " + navID + " is done");
+                    });
+            },200);
+            return debounceFn;
+        }
+    })
+    .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+        $scope.close = function () {
+            $mdSidenav('left').close()
+                .then(function () {
+                    $log.debug("close LEFT is done");
+                });
+        };
+    })
+    .controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+        $scope.close = function () {
+            $mdSidenav('right').close()
+                .then(function () {
+                    $log.debug("close RIGHT is done");
+                });
+        };
+    });
 angular.module('cf-templates', ['/cf-templates/Browse.html', '/cf-templates/Databases.html', '/cf-templates/Fields.html', '/cf-templates/Log-In.html', '/cf-templates/Tables.html', '/cf-templates/directives/cf-pagination.html']);
 
 angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function($templateCache) {
@@ -679,11 +717,11 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
-    "<div class=\"row\">\n" +
-    "    <div class=\"columns small-12\">\n" +
-    "        <h2 class=\"text-center-screen\">Databases</h2>\n" +
+    "<md-toolbar class=\"demo-toolbar md-secondary md-default-theme\">\n" +
+    "    <div class=\"md-toolbar-tools\">\n" +
+    "        <h1 class=\"ng-binding\">Databases</h1>\n" +
     "    </div>\n" +
-    "</div>\n" +
+    "</md-toolbar>\n" +
     "\n" +
     "<div class=\"row push-down\">\n" +
     "    <div class=\"columns medium-6\">\n" +
@@ -796,17 +834,23 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
     "    <p>This is a temporary login form, just use the sample credentials provided for now.</p>\n" +
-    "    <ul>\n" +
-    "        <li>\n" +
-    "            <label for=\"username\">Username : </label>\n" +
-    "            <input type=\"text\" id=\"username\" ng-model=\"loginCtrl.username\"/>\n" +
-    "        </li>\n" +
-    "        <li>\n" +
-    "            <label for=\"password\">Password : </label>\n" +
-    "            <input type=\"password\" id=\"password\" ng-model=\"loginCtrl.password\"/>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
-    "    <button class=\"button\" ng-click=\"loginCtrl.login()\">Log in</button>\n" +
+    "\n" +
+    "\n" +
+    "    <form ng-submit=\"loginCtrl.login()\">\n" +
+    "\n" +
+    "        <md-input-container flex>\n" +
+    "            <label>Username</label>\n" +
+    "            <input ng-model=\"loginCtrl.username\">\n" +
+    "        </md-input-container>\n" +
+    "\n" +
+    "        <md-input-container flex>\n" +
+    "            <label>Password</label>\n" +
+    "            <input ng-model=\"loginCtrl.password\" type=\"password\">\n" +
+    "        </md-input-container>\n" +
+    "\n" +
+    "        <md-button class=\"md-raised md-primary\" type=\"submit\">Log In</md-button>\n" +
+    "    </form>\n" +
+    "\n" +
     "</div>\n" +
     "\n" +
     "<div ng-show=\"main.auth.loggedIn\">\n" +

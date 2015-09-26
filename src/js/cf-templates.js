@@ -59,11 +59,11 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
 
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
-    "<div class=\"row\">\n" +
-    "    <div class=\"columns small-12\">\n" +
-    "        <h2 class=\"text-center-screen\">Databases</h2>\n" +
+    "<md-toolbar class=\"demo-toolbar md-secondary md-default-theme\">\n" +
+    "    <div class=\"md-toolbar-tools\">\n" +
+    "        <h1 class=\"ng-binding\">Databases</h1>\n" +
     "    </div>\n" +
-    "</div>\n" +
+    "</md-toolbar>\n" +
     "\n" +
     "<div class=\"row push-down\">\n" +
     "    <div class=\"columns medium-6\">\n" +
@@ -176,17 +176,23 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
     "    <p>This is a temporary login form, just use the sample credentials provided for now.</p>\n" +
-    "    <ul>\n" +
-    "        <li>\n" +
-    "            <label for=\"username\">Username : </label>\n" +
-    "            <input type=\"text\" id=\"username\" ng-model=\"loginCtrl.username\"/>\n" +
-    "        </li>\n" +
-    "        <li>\n" +
-    "            <label for=\"password\">Password : </label>\n" +
-    "            <input type=\"password\" id=\"password\" ng-model=\"loginCtrl.password\"/>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
-    "    <button class=\"button\" ng-click=\"loginCtrl.login()\">Log in</button>\n" +
+    "\n" +
+    "\n" +
+    "    <form ng-submit=\"loginCtrl.login()\">\n" +
+    "\n" +
+    "        <md-input-container flex>\n" +
+    "            <label>Username</label>\n" +
+    "            <input ng-model=\"loginCtrl.username\">\n" +
+    "        </md-input-container>\n" +
+    "\n" +
+    "        <md-input-container flex>\n" +
+    "            <label>Password</label>\n" +
+    "            <input ng-model=\"loginCtrl.password\" type=\"password\">\n" +
+    "        </md-input-container>\n" +
+    "\n" +
+    "        <md-button class=\"md-raised md-primary\" type=\"submit\">Log In</md-button>\n" +
+    "    </form>\n" +
+    "\n" +
     "</div>\n" +
     "\n" +
     "<div ng-show=\"main.auth.loggedIn\">\n" +

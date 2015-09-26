@@ -2,17 +2,23 @@
 
 <div ng-show="!main.auth.loggedIn">
     <p>This is a temporary login form, just use the sample credentials provided for now.</p>
-    <ul>
-        <li>
-            <label for="username">Username : </label>
-            <input type="text" id="username" ng-model="loginCtrl.username"/>
-        </li>
-        <li>
-            <label for="password">Password : </label>
-            <input type="password" id="password" ng-model="loginCtrl.password"/>
-        </li>
-    </ul>
-    <button class="button" ng-click="loginCtrl.login()">Log in</button>
+
+
+    <form ng-submit="loginCtrl.login()">
+
+        <md-input-container flex>
+            <label>Username</label>
+            <input ng-model="loginCtrl.username">
+        </md-input-container>
+
+        <md-input-container flex>
+            <label>Password</label>
+            <input ng-model="loginCtrl.password" type="password">
+        </md-input-container>
+
+        <md-button class="md-raised md-primary" type="submit">Log In</md-button>
+    </form>
+
 </div>
 
 <div ng-show="main.auth.loggedIn">
