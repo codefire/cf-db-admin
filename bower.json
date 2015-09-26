@@ -15,12 +15,13 @@
     "tests"
   ],
   "dependencies": {
-    "cf-css": "codefire/cf-css",
-    "angular": "~1.3.11",
-    "angular-route": "~1.3.11",
-    "angular-cookies": "~1.3.11"
+    "cf-css": "codefire/cf-css"
   },
   "devDependencies": {
-    "foundation-icon-fonts": "zurb/foundation-icon-fonts"
+    "foundation-icon-fonts": "zurb/foundation-icon-fonts",
+    "angular": "~1.4.6",
+    "angular-cookies": "~1.4.6",
+    "angular-route": "~1.4.6",
+    "modernizer": "~2.8.2"
   }
 }
