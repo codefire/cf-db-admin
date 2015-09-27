@@ -127,7 +127,8 @@ function TokenService() {
 function SettingService() {
     return {
         apiUrl: '/api/',
-        apiType: 'php'
+        apiType: 'php',
+        viewType: 'list'
     }
 }
 
@@ -307,7 +308,7 @@ function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
             if (data.payload.loggedIn == true) {
                 auth.loggedIn = true;
                 auth.bucket.token = data.payload.token;
-                $cookies.cfToken = auth.bucket.token;
+                $cookies.put('cfToken', auth.bucket.token);
                 Navigation.redirect();
             }else{
                 auth.logout();
@@ -332,7 +333,7 @@ function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
             if (typeof(redirect) == 'undefined')
                 redirect = true;
 
-            var cookieToken = $cookies.cfToken;
+            var cookieToken = $cookies.get('cfToken');
             if(typeof(cookieToken) != 'undefined' && this.loggedIn == false){
                 this.loggedIn = true;
                 this.bucket.token = cookieToken;
@@ -380,6 +381,7 @@ function MainController($window, Request, $route, $routeParams, $location, Navig
 
     // default settings
     ctrl.settings = Settings;
+    ctrl.showSettings = false;
 
     AuthService.isLoggedIn();
 

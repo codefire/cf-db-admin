@@ -128,7 +128,8 @@ function TokenService() {
 function SettingService() {
     return {
         apiUrl: '/api/',
-        apiType: 'php'
+        apiType: 'php',
+        viewType: 'list'
     }
 }
 
@@ -308,7 +309,7 @@ function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
             if (data.payload.loggedIn == true) {
                 auth.loggedIn = true;
                 auth.bucket.token = data.payload.token;
-                $cookies.cfToken = auth.bucket.token;
+                $cookies.put('cfToken', auth.bucket.token);
                 Navigation.redirect();
             }else{
                 auth.logout();
@@ -333,7 +334,7 @@ function AuthService($location, $cookies, Token, Request, Navigation, Notify) {
             if (typeof(redirect) == 'undefined')
                 redirect = true;
 
-            var cookieToken = $cookies.cfToken;
+            var cookieToken = $cookies.get('cfToken');
             if(typeof(cookieToken) != 'undefined' && this.loggedIn == false){
                 this.loggedIn = true;
                 this.bucket.token = cookieToken;
@@ -381,6 +382,7 @@ function MainController($window, Request, $route, $routeParams, $location, Navig
 
     // default settings
     ctrl.settings = Settings;
+    ctrl.showSettings = false;
 
     AuthService.isLoggedIn();
 
@@ -625,11 +627,11 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
     "<div ng-show=\"browseCtrl.table\" class=\"row\">\n" +
     "\n" +
     "    <div class=\"columns small-12 cf-browse\">\n" +
-    "    <h2 class=\"text-center-screen\">Browsing {{browseCtrl.table.name}} table in {{browseCtrl.navigation.params.database}} database</h2>\n" +
+    "    <h2 class=\"text-center-screen\">Browsing <strong>{{browseCtrl.table.name}}</strong> table in <strong>{{browseCtrl.navigation.params.database}}</strong> database</h2>\n" +
     "\n" +
     "        <div class=\"row collapse cf-row-count\">\n" +
     "            <div class=\"columns large-6\">\n" +
-    "                <a href=\"/Databases/{{browseCtrl.navigation.params.database}}/Tables\" class=\"button left\"><i class=\"fi-arrow-left\"></i> Back to {{browseCtrl.navigation.params.database}} tables</a>\n" +
+    "                <a href=\"/Databases/{{browseCtrl.navigation.params.database}}/Tables\" class=\"button left\"><i class=\"glyphicon glyphicon-chevron-left\"></i> Back to {{browseCtrl.navigation.params.database}} tables</a>\n" +
     "            </div>\n" +
     "            <div class=\"columns large-1 medium-2 small-3\">\n" +
     "                <span class=\"prefix\">Showing</span>\n" +
@@ -680,22 +682,16 @@ angular.module("/cf-templates/Browse.html", []).run(["$templateCache", function(
 angular.module("/cf-templates/Databases.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("/cf-templates/Databases.html",
     "<div class=\"row\">\n" +
-    "    <div class=\"columns small-12\">\n" +
-    "        <h2 class=\"text-center-screen\">Databases</h2>\n" +
-    "    </div>\n" +
+    "    <h2>Databases</h2>\n" +
     "</div>\n" +
     "\n" +
-    "<div class=\"row push-down\">\n" +
-    "    <div class=\"columns medium-6\">\n" +
-    "        <a href=\"#\" class=\"button left expand\"><i class=\"fi-plus\"></i> Create Database</a>\n" +
-    "    </div>\n" +
+    "<div class=\"btn-group\" role=\"group\">\n" +
+    "    <button type=\"button\" class=\"btn btn-primary\">Create Database</button>\n" +
+    "</div>\n" +
     "\n" +
-    "    <div class=\"columns medium-3\">\n" +
-    "        <a href=\"#\" ng-click=\"gridView=true\" class=\"button right expand\"><i class=\"fi-thumbnails\"></i> Grid View</a>\n" +
-    "    </div>\n" +
-    "    <div class=\"columns medium-3\">\n" +
-    "        <a href=\"#\" ng-click=\"gridView=false\" class=\"button right expand\"><i class=\"fi-list\"></i> List View</a>\n" +
-    "    </div>\n" +
+    "<div class=\"btn-group\" role=\"group\">\n" +
+    "    <button type=\"button\" class=\"btn btn-default\" ng-class=\"{active:main.settings.viewType == 'grid'}\" ng-click=\"main.settings.viewType = 'grid'\">Grid View</button>\n" +
+    "    <button type=\"button\" class=\"btn btn-default\" ng-class=\"{active:main.settings.viewType != 'grid'}\" ng-click=\"main.settings.viewType = 'list'\">List View</button>\n" +
     "</div>\n" +
     "\n" +
     "<ul>\n" +
@@ -704,7 +700,7 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "    </li>\n" +
     "</ul>\n" +
     "\n" +
-    "<div ng-show=\"gridView\" class=\"row\">\n" +
+    "<div ng-show=\"main.settings.viewType == 'grid'\" class=\"row\">\n" +
     "\n" +
     "    <div class=\"columns small-12\">\n" +
     "        <div class=\"large-4 small-6 columns left cf-grid-box\" ng-repeat=\"database in databaseCtrl.databases\">\n" +
@@ -716,7 +712,7 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "            </div>\n" +
     "            <div class=\"row\">\n" +
     "                <div class=\"columns small-6 text-center\">\n" +
-    "                    <a href=\"Databases/{{database.name}}/Tables\"><i class=\"fi-pencil\"></i></a>\n" +
+    "                    <a href=\"Databases/{{database.name}}/Tables\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-edit\"></i></a>\n" +
     "                </div>\n" +
     "                <div class=\"columns small-6 text-centers\">\n" +
     "                    <i class=\"fi-x\"></i>\n" +
@@ -727,10 +723,10 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "\n" +
     "</div>\n" +
     "\n" +
-    "<div ng-show=\"!gridView\" class=\"row\">\n" +
+    "<div ng-show=\"main.settings.viewType != 'grid'\" class=\"row\">\n" +
     "\n" +
     "    <div class=\"columns medium-6\">\n" +
-    "        <table>\n" +
+    "        <table class=\"table table-striped\">\n" +
     "            <thead>\n" +
     "            <tr>\n" +
     "                <th width=\"350\">Database</th>\n" +
@@ -743,7 +739,7 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "            <tr ng-repeat=\"database in databaseCtrl.databases\">\n" +
     "                <td>{{database.name}}</td>\n" +
     "                <td class=\"text-center\">{{database.tableCount}}</td>\n" +
-    "                <td class=\"text-center\"><a href=\"Databases/{{database.name}}/Tables\"><i class=\"fi-pencil\"></i></a></td>\n" +
+    "                <td class=\"text-center\"><a href=\"Databases/{{database.name}}/Tables\"><i class=\"glyphicon glyphicon-edit\"></i></a></td>\n" +
     "                <td class=\"text-center\"><i class=\"fi-x\"></i></td>\n" +
     "            </tr>\n" +
     "            </tbody>\n" +
@@ -751,10 +747,7 @@ angular.module("/cf-templates/Databases.html", []).run(["$templateCache", functi
     "    </div>\n" +
     "\n" +
     "</div>\n" +
-    "\n" +
-    "<script>\n" +
-    "    $(document).foundation();\n" +
-    "</script>");
+    "");
 }]);
 
 angular.module("/cf-templates/Fields.html", []).run(["$templateCache", function($templateCache) {
@@ -796,18 +789,28 @@ angular.module("/cf-templates/Log-In.html", []).run(["$templateCache", function(
     "\n" +
     "<div ng-show=\"!main.auth.loggedIn\">\n" +
     "    <p>This is a temporary login form, just use the sample credentials provided for now.</p>\n" +
-    "    <ul>\n" +
-    "        <li>\n" +
+    "\n" +
+    "\n" +
+    "    <form ng-submit=\"loginCtrl.login()\">\n" +
+    "\n" +
+    "        <div class=\"form-group\">\n" +
     "            <label for=\"username\">Username : </label>\n" +
-    "            <input type=\"text\" id=\"username\" ng-model=\"loginCtrl.username\"/>\n" +
-    "        </li>\n" +
-    "        <li>\n" +
+    "            <input type=\"username\" id=\"username\" class=\"form-control\" ng-model=\"loginCtrl.username\" placeholder=\"USername\">\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <div class=\"form-group\">\n" +
     "            <label for=\"password\">Password : </label>\n" +
-    "            <input type=\"password\" id=\"password\" ng-model=\"loginCtrl.password\"/>\n" +
-    "        </li>\n" +
-    "    </ul>\n" +
-    "    <button class=\"button\" ng-click=\"loginCtrl.login()\">Log in</button>\n" +
+    "            <input type=\"password\" id=\"password\" class=\"form-control\" ng-model=\"loginCtrl.password\" placeholder=\"Password\">\n" +
+    "        </div>\n" +
+    "\n" +
+    "        <button class=\"btn btn-primary\">Log in</button>\n" +
+    "\n" +
+    "    </form>\n" +
+    "\n" +
+    "\n" +
     "</div>\n" +
+    "\n" +
+    "\n" +
     "\n" +
     "<div ng-show=\"main.auth.loggedIn\">\n" +
     "    <p>You are now logged in :)</p>\n" +
@@ -826,7 +829,7 @@ angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function(
     "<div ng-show=\"tableCtrl.tables\" class=\"row\">\n" +
     "\n" +
     "    <div class=\"columns medium-6\">\n" +
-    "        <table class=\"cf-table-list\">\n" +
+    "        <table class=\"table table-striped cf-table-list\">\n" +
     "            <thead>\n" +
     "            <tr>\n" +
     "                <th width=\"300\">Table</th>\n" +
@@ -837,8 +840,8 @@ angular.module("/cf-templates/Tables.html", []).run(["$templateCache", function(
     "            <tbody>\n" +
     "            <tr ng-repeat=\"table in tableCtrl.tables\">\n" +
     "                <td>{{table.name}}</td>\n" +
-    "                <td class=\"text-center\"><a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\"><i class=\"fi-list-thumbnails\"></i></a></td>\n" +
-    "                <td class=\"text-center\"><a href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\"><i class=\"fi-eye\"></i></a></td>\n" +
+    "                <td class=\"text-center\"><a class=\"btn btn-default\" href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/\"><i class=\"glyphicon glyphicon-list\"></i></a></td>\n" +
+    "                <td class=\"text-center\"><a class=\"btn btn-default\" href=\"/Databases/{{tableCtrl.navigation.params.database}}/Tables/{{table.name}}/browse/\"><i class=\"glyphicon glyphicon-eye-open\"></i></a></td>\n" +
     "            </tr>\n" +
     "            </tbody>\n" +
     "        </table>\n" +
@@ -859,13 +862,13 @@ angular.module("/cf-templates/directives/cf-pagination.html", []).run(["$templat
     "<div>\n" +
     "    <ul class=\"pagination\">\n" +
     "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page == 1}\">\n" +
-    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page - 1)\"><i class=\"fi-arrow-left\"></i></a>\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page - 1)\"><i class=\"glyphicon glyphicon-chevron-left\"></i></a>\n" +
     "        </li>\n" +
     "        <li ng-repeat=\"number in ctrl.pagination.numbers\" ng-class=\"{current: number == ctrl.pagination.page}\">\n" +
     "            <a ng-click=\"ctrl.selectPage(number)\">{{number}}</a>\n" +
     "        </li>\n" +
     "        <li class=\"arrow\" ng-class=\"{unavailable: ctrl.pagination.page >= ctrl.pagination.pages}\">\n" +
-    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page + 1)\"><i class=\"fi-arrow-right\"></i></a>\n" +
+    "            <a ng-click=\"ctrl.selectPage(ctrl.pagination.page + 1)\"><i class=\"glyphicon glyphicon-chevron-right\"></i></a>\n" +
     "        </li>\n" +
     "    </ul>\n" +
     "</div>");

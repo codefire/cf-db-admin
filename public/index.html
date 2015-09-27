@@ -20,7 +20,7 @@
     <script>document.write('<script id="LiveReloadScript" src="http://127.0.0.1:35729/livereload.js?snipver=1"></' + 'script>')</script>
 
     <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/foundation.min.js"></script>
+    <script src="assets/js/bootstrap.js"></script>
     <script src="assets/js/angular.js"></script>
     <script src="assets/js/cf-db-admin.js"></script>
 
@@ -32,131 +32,92 @@
 <![endif]-->
 <div ng-controller="MainController as main">
 
-    <div class="off-canvas-wrap" data-offcanvas>
-        <div class="inner-wrap">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Project name</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
 
-            <!-- Off Canvas Menu -->
-            <aside class="right-off-canvas-menu">
-                <!-- whatever you want goes here -->
-                <div class="panel">
-                    <h3>API Type</h3>
+                    <li ng-show="main.auth.loggedIn"><a href="/Databases/">Databases</a></li>
+
+                    <li ng-show="main.auth.loggedIn"><a href="/log-in/" ng-click="main.logout()">Log Out</a></li>
+                    <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
+                    <li><a ng-click="main.showSettings = !main.showSettings">Settings</a></li>
+                </ul>
+
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container view-container">
+        <div id="main-view" ng-view></div>
+    </div><!-- /.container -->
+
+    <div id="settings-menu" class="row" ng-show="main.showSettings">
+        <div class="col-xs-12 col-md-5 col-lg-3 pull-right well">
+            <button class="btn btn-sm btn-danger pull-right" ng-click="main.showSettings=false">close</button>
+
+            <h2 class="heading">Settings</h2>
+
+            <div class="settings-holder">
+                <div class="settings-group">
+                    <h4>API Type</h4>
 
                     <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="dummy"/> Dummy API</label>
                     <label><input type="radio" name="apiType" ng-model="main.settings.apiType" value="php"/> php API</label>
 
-                    <ul>
-                        <li><a href="#">Item 1</a></li>
-                    </ul>
                 </div>
-            </aside>
 
-            <div class="contain-to-grid sticky">
-                <nav class="top-bar" data-topbar role="navigation" data-options="sticky_on: large">
-                    <ul class="title-area">
-                        <li class="name">
-                            <h1><a href="/"> Database Admin
-                                <small>by Code Fire</small>
-                            </a>
-                            </h1>
+                <div class="settings-group">
+                    <h4>View Type</h4>
+                    <label><input type="radio" name="apiType" ng-model="main.settings.viewType" value="list"/> List</label>
+                    <label><input type="radio" name="apiType" ng-model="main.settings.viewType" value="grid"/> Grid</label>
+                </div>
+            </div>
+        </div>
+    </div><!--/.sidebar-offcanvas-->
 
-                        </li>
-                        <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                        <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
-                    </ul>
 
-                    <section class="top-bar-section">
-                        <ul class="right">
-                            <li><a href="/">Home</a></li>
+    <div class="row">
 
-                            <li class="has-dropdown" ng-show="main.auth.loggedIn">
-                                <a href="#">Quick Links</a>
-                                <ul class="dropdown">
-                                    <li><a href="/Databases/">Databases</a></li>
-                                </ul>
-                            </li>
-
-                            <li ng-show="main.auth.loggedIn"><a href="/log-in/" ng-click="main.logout()">Log Out</a></li>
-                            <li ng-show="!main.auth.loggedIn"><a href="/log-in/">Log In</a></li>
-                            <li><a class="right-off-canvas-toggle" href="#">Settings</a></li>
-                        </ul>
-
-                    </section>
-                </nav>
+        <div class="small-12 columns" role="content">
+            <div ng-show="main.notifications">
+                <div ng-show="main.notifications.errors">
+                    <div class="alert label" ng-repeat="error in main.notifications.errors">
+                        {{error.message}}
+                    </div>
+                </div>
+                <div ng-show="main.notifications.warnings">
+                    <div class="secondary label" ng-repeat="warning in main.notifications.warnings">
+                        {{warning.message}}
+                    </div>
+                </div>
+                <div ng-show="main.notifications.messages">
+                    <div class="label" ng-repeat="msg in main.notifications.messages">
+                        {{msg.message}}
+                    </div>
+                </div>
             </div>
 
-            <div class="row">
-
-                <div class="small-12 columns" role="content">
-                    <div ng-show="main.notifications">
-                        <div ng-show="main.notifications.errors">
-                            <div class="alert label" ng-repeat="error in main.notifications.errors">
-                                {{error.message}}
-                            </div>
-                        </div>
-                        <div ng-show="main.notifications.warnings">
-                            <div class="secondary label" ng-repeat="warning in main.notifications.warnings">
-                                {{warning.message}}
-                            </div>
-                        </div>
-                        <div ng-show="main.notifications.messages">
-                            <div class="label" ng-repeat="msg in main.notifications.messages">
-                                {{msg.message}}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div ng-view>
-
-                        <!-- TEMPLATES FROM THE TEMPLATE DIRECTORY GET INJECTED HERE -->
-
-                    </div>
-                </div>
-
-                <!--<aside class="large-3 columns">-->
-                    <!--<ul>-->
-                        <!--<li>api type : {{main.settings.apiType}}</li>-->
-                        <!--<li>main.auth.loggedIn: {{main.auth.loggedIn}}</li>-->
-                        <!--<li>main.auth.token: {{main.auth.bucket.token}}</li>-->
-                        <!--<li>main.location.path(): {{main.location.path()}}</li>-->
-                        <!--<li>main.navigation.redirectTo: {{main.navigation.redirectTo}}</li>-->
-                        <!--<li>main.route.current.templateUrl: {{main.route.current.templateUrl}}</li>-->
-                    <!--</ul>-->
-                <!--</aside>-->
-
-            </div>
-
-            <footer class="row">
-                <div class="large-12 columns">
-                    <hr/>
-                    <div class="row">
-                        <div class="large-6 columns">
-                            <p></p>
-                        </div>
-                        <div class="large-6 columns">
-                            <ul class="inline-list right">
-                                <li><a href="#">Link 1</a></li>
-                                <li><a href="#">Link 2</a></li>
-                                <li><a href="#">Link 3</a></li>
-                                <li><a href="#">Link 4</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-            <!-- close the off-canvas menu -->
-            <a class="exit-off-canvas"></a>
 
         </div>
+
+
     </div>
 
 
-</div>
+ </div>
 <!-- end MainController -->
 
-
-<script>
-    $(document).foundation();
-</script>
 
 </body>
 </html>

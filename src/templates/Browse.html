@@ -1,11 +1,11 @@
 <div ng-show="browseCtrl.table" class="row">
 
     <div class="columns small-12 cf-browse">
-    <h2 class="text-center-screen">Browsing {{browseCtrl.table.name}} table in {{browseCtrl.navigation.params.database}} database</h2>
+    <h2 class="text-center-screen">Browsing <strong>{{browseCtrl.table.name}}</strong> table in <strong>{{browseCtrl.navigation.params.database}}</strong> database</h2>
 
         <div class="row collapse cf-row-count">
             <div class="columns large-6">
-                <a href="/Databases/{{browseCtrl.navigation.params.database}}/Tables" class="button left"><i class="fi-arrow-left"></i> Back to {{browseCtrl.navigation.params.database}} tables</a>
+                <a href="/Databases/{{browseCtrl.navigation.params.database}}/Tables" class="button left"><i class="glyphicon glyphicon-chevron-left"></i> Back to {{browseCtrl.navigation.params.database}} tables</a>
             </div>
             <div class="columns large-1 medium-2 small-3">
                 <span class="prefix">Showing</span>

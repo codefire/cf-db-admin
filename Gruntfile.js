@@ -51,12 +51,11 @@ module.exports = function (grunt) {
                 ],
                 dest: 'public/assets/js/jquery.min.js'
             },
-            foundation: {
+            bootstrap: {
                 src: [
-                    bowerPath + 'modernizr/modernizr.js',
-                    bowerPath + 'foundation/js/foundation.js'
+                    bowerPath + 'bootstrap-sass/assets/javascripts/bootstrap.min.js',
                 ],
-                dest: 'public/assets/js/foundation.js'
+                dest: 'public/assets/js/bootstrap.js'
             }
         },
         uglify: {

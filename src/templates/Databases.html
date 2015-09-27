@@ -1,20 +1,14 @@
 <div class="row">
-    <div class="columns small-12">
-        <h2 class="text-center-screen">Databases</h2>
-    </div>
+    <h2>Databases</h2>
 </div>
 
-<div class="row push-down">
-    <div class="columns medium-6">
-        <a href="#" class="button left expand"><i class="fi-plus"></i> Create Database</a>
-    </div>
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-primary">Create Database</button>
+</div>
 
-    <div class="columns medium-3">
-        <a href="#" ng-click="gridView=true" class="button right expand"><i class="fi-thumbnails"></i> Grid View</a>
-    </div>
-    <div class="columns medium-3">
-        <a href="#" ng-click="gridView=false" class="button right expand"><i class="fi-list"></i> List View</a>
-    </div>
+<div class="btn-group" role="group">
+    <button type="button" class="btn btn-default" ng-class="{active:main.settings.viewType == 'grid'}" ng-click="main.settings.viewType = 'grid'">Grid View</button>
+    <button type="button" class="btn btn-default" ng-class="{active:main.settings.viewType != 'grid'}" ng-click="main.settings.viewType = 'list'">List View</button>
 </div>
 
 <ul>
@@ -23,7 +17,7 @@
     </li>
 </ul>
 
-<div ng-show="gridView" class="row">
+<div ng-show="main.settings.viewType == 'grid'" class="row">
 
     <div class="columns small-12">
         <div class="large-4 small-6 columns left cf-grid-box" ng-repeat="database in databaseCtrl.databases">
@@ -35,7 +29,7 @@
             </div>
             <div class="row">
                 <div class="columns small-6 text-center">
-                    <a href="Databases/{{database.name}}/Tables"><i class="fi-pencil"></i></a>
+                    <a href="Databases/{{database.name}}/Tables" class="btn btn-default"><i class="glyphicon glyphicon-edit"></i></a>
                 </div>
                 <div class="columns small-6 text-centers">
                     <i class="fi-x"></i>
@@ -46,10 +40,10 @@
 
 </div>
 
-<div ng-show="!gridView" class="row">
+<div ng-show="main.settings.viewType != 'grid'" class="row">
 
     <div class="columns medium-6">
-        <table>
+        <table class="table table-striped">
             <thead>
             <tr>
                 <th width="350">Database</th>
@@ -62,7 +56,7 @@
             <tr ng-repeat="database in databaseCtrl.databases">
                 <td>{{database.name}}</td>
                 <td class="text-center">{{database.tableCount}}</td>
-                <td class="text-center"><a href="Databases/{{database.name}}/Tables"><i class="fi-pencil"></i></a></td>
+                <td class="text-center"><a href="Databases/{{database.name}}/Tables"><i class="glyphicon glyphicon-edit"></i></a></td>
                 <td class="text-center"><i class="fi-x"></i></td>
             </tr>
             </tbody>
@@ -70,7 +64,3 @@
     </div>
 
 </div>
-
-<script>
-    $(document).foundation();
-</script>
